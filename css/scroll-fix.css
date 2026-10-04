@@ -1,0 +1,189 @@
+/* ============================================================
+   scroll-fix.css
+   Miss Math — Fix for Process Section Reveal Conflicts
+   فاز ۵ — نسخه v1.0.0
+
+   ─── PROBLEM ──────────────────────────────────────────────
+   The .process__step has:
+     • CSS Grid layout (positioned by grid)
+     • Absolute positioned .process__connector arrows
+     • Border-based decoration on hover
+
+   When reveal adds:
+     • transform: translateY(32px)
+     • will-change: transform, opacity
+     • contain: layout style
+
+   → Creates a new stacking context
+   → Breaks absolutely-positioned children (connectors)
+   → Contains layout confines the box, clipping connectors
+   → Grid items appear "wrong"
+
+   ─── SOLUTION ─────────────────────────────────────────────
+   Override reveal rules ONLY for .process__step:
+     • Remove contain
+     • Use a wrapped reveal (opacity-only)
+     • Keep transform smooth and simple
+   ============================================================ */
+
+
+/* ═══════════════════════════════════════════════════════════
+   01. PROCESS STEP — REVEAL FIX
+   ═══════════════════════════════════════════════════════════ */
+
+/* Remove the problematic `contain` that clips connectors */
+.process__step.reveal-element {
+  contain: none !important;
+  will-change: auto !important;
+}
+
+/* Simplify the reveal animation — no scale, no rotation,
+   just a gentle opacity + short translate */
+.process__step.reveal-fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 800ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 850ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.process__step.reveal-fade-up.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Keep the connector positioning intact */
+.process__step {
+  position: relative;
+  transform-origin: center center;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+}
+
+/* Ensure connectors stay visible on top */
+.process__connector {
+  z-index: 10;
+  pointer-events: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   02. GRID ITEMS — GENERAL FIX
+   ─── Any element inside a CSS Grid should not have `contain`
+       because it can shift grid alignment.
+   ═══════════════════════════════════════════════════════════ */
+
+.process__steps > .reveal-element,
+.classes__grid > .reveal-element,
+.testimonials__grid > .reveal-element,
+.about__credentials > .reveal-element {
+  contain: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   03. PROCESS STEP HOVER — KEEP INTACT
+   ─── Ensure hover still works and doesn't fight with reveal
+   ═══════════════════════════════════════════════════════════ */
+
+.process__step.reveal-visible:hover {
+  transform: translateY(-5px) !important;
+  transition:
+    transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 340ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.process__step.reveal-visible:active {
+  transform: translateY(-2px) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   04. NUMBER BADGE — KEEP ON TOP
+   ═══════════════════════════════════════════════════════════ */
+
+.process__step-num {
+  z-index: 5;
+}
+
+.process__step .process__step-header {
+  position: relative;
+  z-index: 3;
+}
+
+.process__step .process__step-text {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   05. MOBILE — STACKING VERTICAL
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .process__connector {
+    display: none !important;
+  }
+
+  .process__step {
+    margin-bottom: 0.5rem;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   06. DESKTOP — CONNECTOR ALIGNMENT
+   ═══════════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+  .process__step {
+    overflow: visible !important;
+  }
+
+  .process__connector {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   07. REVEAL SAFETY — NO `contain` ON ANY STEP
+   ═══════════════════════════════════════════════════════════ */
+
+.process__step.reveal-element,
+.process__step.reveal-fade-up,
+.process__step.reveal-visible {
+  contain: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   08. CONTAINER QUERIES FALLBACK
+   ─── In case the browser supports `container-type`, avoid
+       applying it to reveal elements
+   ═══════════════════════════════════════════════════════════ */
+
+.process__steps {
+  container-type: normal;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   09. REDUCED MOTION — OVERRIDE
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .process__step.reveal-fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   10. END OF SCROLL-FIX.CSS
+   ═══════════════════════════════════════════════════════════ */

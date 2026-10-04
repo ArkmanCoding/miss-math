@@ -1,0 +1,1181 @@
+/* ============================================================
+   main.css
+   Miss Math — Foundation & Design System
+   فاز ۲ — فایل ۳ از ۱۰
+
+   This is the SOURCE OF TRUTH for design tokens.
+   Loaded first, so all subsequent CSS files inherit these.
+
+   Contains:
+   - Modern CSS Reset
+   - Design Tokens (colors, type, spacing, radius, shadow, motion)
+   - Base Typography (fluid with clamp)
+   - Body with paper texture
+   - Headings, links, selection, focus
+   - Custom scrollbar
+   - Container & layout primitives
+   - Utility classes
+   - Shared keyframes
+   - Reduced motion & print
+   ============================================================ */
+
+
+/* ============================================================
+   1. MODERN CSS RESET
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga", "calt";
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+svg {
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary {
+  list-style: none;
+}
+
+
+/* ============================================================
+   2. DESIGN TOKENS — SOURCE OF TRUTH
+   ============================================================ */
+
+:root {
+
+  /* ---------- INK PALETTE ---------- */
+  /* Fountain-pen blue-black. Warm-shifted, never pure black. */
+  --ink-950: #0A0E17;
+  --ink-900: #131823;
+  --ink-800: #1E2637;
+  --ink-700: #2F3A4F;
+  --ink-600: #46546D;
+  --ink-500: #6A7791;
+  --ink-400: #98A3B8;
+  --ink-300: #C0C8D6;
+  --ink-200: #DEE3EB;
+  --ink-100: #EEF1F5;
+  --ink-50:  #F6F8FA;
+
+  /* ---------- PAPER PALETTE ---------- */
+  /* Warm notebook pages. Not sterile white. */
+  --paper-50:  #FBF8F0;
+  --paper-100: #F6F1E4;
+  --paper-200: #EDE5D2;
+  --paper-300: #DED2B7;
+  --paper-400: #C9B98F;
+
+  /* ---------- MUSTARD (primary accent) ---------- */
+  /* Deep ochre, not orange. Warm, characterful. */
+  --mustard-700: #7A5310;
+  --mustard-600: #A06E14;
+  --mustard-500: #C68B1E;
+  --mustard-400: #DDA83D;
+  --mustard-300: #EDC77A;
+  --mustard-200: #F5DEAB;
+  --mustard-100: #FAEFD3;
+
+  /* ---------- RUST (alert / warm highlight) ---------- */
+  --rust-700: #7A3520;
+  --rust-600: #A64B2A;
+  --rust-500: #C25E3A;
+  --rust-400: #D68364;
+  --rust-200: #EFD0C2;
+  --rust-100: #F7E6DD;
+
+  /* ---------- PETROL (secondary — deep teal) ---------- */
+  --petrol-700: #143F42;
+  --petrol-600: #1E5A5E;
+  --petrol-500: #2A7A80;
+  --petrol-400: #4F9CA1;
+  --petrol-200: #C7DEE0;
+  --petrol-100: #E1EEF0;
+
+  /* ---------- OLIVE (tertiary — muted green) ---------- */
+  --olive-600: #4F5634;
+  --olive-500: #6B7248;
+  --olive-400: #909869;
+  --olive-200: #D9DEC5;
+
+  /* ---------- PLUM (rare surprise accent) ---------- */
+  --plum-600: #5C2E4A;
+  --plum-500: #7E4067;
+  --plum-200: #E4CDD8;
+
+  /* ---------- SEMANTIC ---------- */
+  --success-600: #2F7A47;
+  --success-100: #DCEEDF;
+  --danger-600: #A33B2A;
+  --danger-100: #F1D8D2;
+
+  /* ---------- SEMANTIC ALIASES (for convenience) ---------- */
+  --color-bg:            var(--paper-50);
+  --color-bg-alt:        var(--paper-100);
+  --color-surface:       #FFFFFF;
+  --color-text:          var(--ink-900);
+  --color-text-muted:    var(--ink-600);
+  --color-text-subtle:   var(--ink-400);
+  --color-border:        var(--ink-200);
+  --color-border-strong: var(--ink-300);
+  --color-accent:        var(--mustard-500);
+  --color-accent-hover:  var(--mustard-600);
+  --color-accent-soft:   var(--mustard-300);
+  --color-accent-tint:   var(--mustard-100);
+
+  /* ---------- TYPOGRAPHY ---------- */
+  --font-family: 'Vazirmatn', 'Tahoma', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-display: Georgia, 'Times New Roman', 'Vazirmatn', serif;
+  --font-family-mono: 'Fira Code', 'Courier New', 'Vazirmatn', monospace;
+
+  /* Fluid type scale — mobile-first, capped for readability */
+  --fs-display-2: clamp(3rem, 11vw, 6rem);
+  --fs-display-1: clamp(2.25rem, 8.5vw, 4.5rem);
+  --fs-h1: clamp(1.875rem, 6vw, 3rem);
+  --fs-h2: clamp(1.625rem, 5vw, 2.5rem);
+  --fs-h3: clamp(1.375rem, 3.5vw, 1.75rem);
+  --fs-h4: clamp(1.125rem, 2.8vw, 1.375rem);
+  --fs-h5: clamp(1rem, 2.4vw, 1.1875rem);
+  --fs-body-lg: clamp(1rem, 2.4vw, 1.125rem);
+  --fs-body:    clamp(0.9375rem, 2.2vw, 1.0625rem);
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem;
+  --fs-2xs: 0.6875rem;
+
+  /* Font weights */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+  --fw-extrabold: 800;
+  --fw-black:    900;
+
+  /* Line heights */
+  --lh-tight:   1.15;
+  --lh-heading: 1.3;
+  --lh-body:    1.85;
+  --lh-relaxed: 2;
+
+  /* Letter spacing */
+  --ls-tight:  -0.03em;
+  --ls-snug:   -0.015em;
+  --ls-normal: 0;
+  --ls-wide:   0.05em;
+  --ls-wider:  0.12em;
+
+  /* ---------- SPACING (base-4) ---------- */
+  --space-0:  0;
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-7:  1.75rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Semantic spacing */
+  --section-py:    clamp(3.5rem, 9vw, 6.5rem);
+  --section-py-sm: clamp(2.5rem, 6vw, 4rem);
+
+  /* ---------- RADIUS ---------- */
+  --r-none:  0;
+  --r-xs:    4px;
+  --r-sm:    8px;
+  --r-md:    12px;
+  --r-lg:    16px;
+  --r-xl:    22px;
+  --r-2xl:   28px;
+  --r-3xl:   36px;
+  --r-pill:  999px;
+  --r-round: 50%;
+
+  /* Asymmetric radii — hand-cut feel */
+  --r-card:     28px 28px 28px 8px;
+  --r-card-alt: 8px 28px 28px 28px;
+  --r-badge:    4px 12px 12px 4px;
+  --r-button:   14px;
+  --r-input:    12px;
+  --r-tag:      6px;
+
+  /* ---------- SHADOWS ---------- */
+  /* Warm-tinted (not gray) */
+  --lift-xs: 0 1px 2px rgba(58, 42, 20, 0.06);
+  --lift-sm: 0 3px 8px rgba(58, 42, 20, 0.08), 0 1px 2px rgba(58, 42, 20, 0.05);
+  --lift-md: 0 10px 24px rgba(58, 42, 20, 0.10), 0 3px 6px rgba(58, 42, 20, 0.05);
+  --lift-lg: 0 20px 44px rgba(58, 42, 20, 0.12), 0 6px 12px rgba(58, 42, 20, 0.06);
+  --lift-xl: 0 32px 72px rgba(58, 42, 20, 0.16), 0 10px 20px rgba(58, 42, 20, 0.08);
+
+  /* Letterpress hard shadows */
+  --press-xs: 1px 1px 0 0 var(--ink-900);
+  --press-sm: 2px 2px 0 0 var(--ink-900);
+  --press-md: 4px 4px 0 0 var(--ink-900);
+  --press-lg: 6px 6px 0 0 var(--ink-900);
+  --press-xl: 8px 8px 0 0 var(--ink-900);
+
+  /* Tinted press shadows */
+  --press-amber: 4px 4px 0 0 var(--mustard-600);
+  --press-rust:  4px 4px 0 0 var(--rust-600);
+  --press-petrol: 4px 4px 0 0 var(--petrol-700);
+
+  /* Inset */
+  --inset-top: inset 0 1px 2px rgba(58, 42, 20, 0.06);
+  --inset-deep: inset 0 3px 6px rgba(58, 42, 20, 0.10);
+
+  /* ---------- MOTION ---------- */
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:      cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring:  cubic-bezier(0.22, 1.4, 0.36, 1);
+  --ease-stamp:   cubic-bezier(0.5, 1.8, 0.4, 1);
+
+  --t-instant: 80ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast:    140ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-base:    240ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-slow:    420ms cubic-bezier(0.16, 1, 0.3, 1);
+  --t-glacial: 700ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---------- LAYOUT ---------- */
+  --container-max:    1200px;
+  --container-narrow: 760px;
+  --container-wide:   1400px;
+  --container-pad:    clamp(1rem, 4vw, 1.5rem);
+
+  /* ---------- HEADER ---------- */
+  --header-h: 72px;
+
+  /* ---------- Z-INDEX SCALE ---------- */
+  --z-base:    1;
+  --z-above:   10;
+  --z-nav:     50;
+  --z-header:  100;
+  --z-sticky:  200;
+  --z-announce: 300;
+  --z-drawer:  450;
+  --z-sheet:   500;
+  --z-panel:   600;
+  --z-modal:   700;
+  --z-toast:   900;
+  --z-skip:    999;
+
+  /* ---------- PAPER TEXTURES ---------- */
+  /* Fine noise (grain) — SVG fractal noise */
+  --paper-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.12 0 0 0 0 0.15 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Grid pattern — notebook paper */
+  --paper-grid:
+    linear-gradient(rgba(19, 24, 35, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19, 24, 35, 0.032) 1px, transparent 1px);
+
+  /* Dot pattern */
+  --paper-dots:
+    radial-gradient(circle, rgba(19, 24, 35, 0.06) 1px, transparent 1.2px);
+
+  /* Diagonal hatch */
+  --paper-hatch:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 6px,
+      rgba(19, 24, 35, 0.028) 6px,
+      rgba(19, 24, 35, 0.028) 7px
+    );
+
+  /* Red margin line (school notebook) */
+  --notebook-margin: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent calc(100% - 3px),
+    rgba(196, 88, 60, 0.18) calc(100% - 3px),
+    rgba(196, 88, 60, 0.18) 100%
+  );
+}
+
+
+/* ============================================================
+   3. BASE ELEMENT STYLES
+   ============================================================ */
+
+html {
+  background-color: var(--paper-50);
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
+  font-variant-numeric: normal;
+}
+
+/* ============================================================
+   4. PAPER TEXTURE OVERLAY
+   ============================================================ */
+
+/* Global grain — subtle, multiply blend, never interferes with clicks */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--paper-noise);
+  background-size: 240px 240px;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+/* Soft vignette — subtle warm edges */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(58, 42, 20, 0.04) 100%
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Ensure content sits above textures */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Prevent body texture from breaking fixed elements */
+.announce-bar,
+.site-header,
+.drawer,
+.sheet,
+.panel,
+.modal,
+.toast,
+.sticky-cta {
+  isolation: isolate;
+}
+
+
+/* ============================================================
+   5. TYPOGRAPHY — headings, paragraphs, inline
+   ============================================================ */
+
+h1 {
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--ink-900);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-black);
+  line-height: 1.22;
+  letter-spacing: var(--ls-tight);
+  color: var(--ink-900);
+}
+
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-snug);
+  color: var(--ink-900);
+}
+
+h4 {
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-snug);
+  color: var(--ink-900);
+}
+
+h5 {
+  font-size: var(--fs-h5);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--ink-800);
+}
+
+h6 {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-heading);
+  color: var(--ink-800);
+}
+
+p {
+  line-height: var(--lh-body);
+}
+
+p + p {
+  margin-top: var(--space-4);
+}
+
+strong,
+b {
+  font-weight: var(--fw-extrabold);
+  color: var(--ink-900);
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+small {
+  font-size: var(--fs-xs);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+}
+
+code {
+  padding: 0.15em 0.4em;
+  background-color: var(--paper-100);
+  border: 1px solid var(--ink-200);
+  border-radius: var(--r-xs);
+  color: var(--rust-600);
+  direction: ltr;
+  display: inline-block;
+}
+
+mark {
+  background-color: var(--mustard-200);
+  color: var(--ink-900);
+  padding: 0.1em 0.25em;
+  border-radius: var(--r-xs);
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: help;
+}
+
+/* Numerals — tabular for stats */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ============================================================
+   6. LINKS
+   ============================================================ */
+
+a {
+  color: var(--mustard-700);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+a:hover {
+  color: var(--mustard-500);
+}
+
+a:focus-visible {
+  outline: 3px solid var(--mustard-500);
+  outline-offset: 3px;
+  border-radius: var(--r-xs);
+}
+
+/* Content links — auto underline */
+.content a {
+  text-decoration: underline;
+  text-decoration-color: rgba(160, 110, 20, 0.35);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  font-weight: var(--fw-semibold);
+  transition: text-decoration-color var(--t-fast), color var(--t-fast);
+}
+
+.content a:hover {
+  text-decoration-color: var(--mustard-500);
+}
+
+
+/* ============================================================
+   7. SELECTION
+   ============================================================ */
+
+::selection {
+  background-color: var(--mustard-300);
+  color: var(--ink-950);
+}
+
+::-moz-selection {
+  background-color: var(--mustard-300);
+  color: var(--ink-950);
+}
+
+
+/* ============================================================
+   8. FOCUS MANAGEMENT
+   ============================================================ */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--mustard-500);
+  outline-offset: 3px;
+  border-radius: var(--r-xs);
+}
+
+/* Remove focus ring on mouse click, keep on keyboard */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+
+/* ============================================================
+   9. CUSTOM SCROLLBAR
+   ============================================================ */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-400) var(--paper-100);
+}
+
+/* WebKit */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--paper-100);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 5px,
+      rgba(19, 24, 35, 0.025) 5px,
+      rgba(19, 24, 35, 0.025) 10px
+    );
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--ink-400);
+  border-radius: var(--r-pill);
+  border: 3px solid var(--paper-100);
+  transition: background-color var(--t-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ink-600);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--mustard-600);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: var(--paper-100);
+}
+
+
+/* ============================================================
+   10. CONTAINER & LAYOUT PRIMITIVES
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+.container--full {
+  max-width: none;
+  padding-inline: var(--container-pad);
+}
+
+/* Vertical rhythm helpers */
+.stack > * + * {
+  margin-top: var(--space-4);
+}
+
+.stack--sm > * + * {
+  margin-top: var(--space-2);
+}
+
+.stack--lg > * + * {
+  margin-top: var(--space-6);
+}
+
+/* Grid primitive */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+/* ============================================================
+   11. UTILITY CLASSES
+   ============================================================ */
+
+/* Screen-reader only */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hidden but focusable (for skip-link) */
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+/* Text alignment */
+.text-start  { text-align: start; }
+.text-center { text-align: center; }
+.text-end    { text-align: end; }
+
+/* Display */
+.block        { display: block; }
+.inline-block { display: inline-block; }
+.flex         { display: flex; }
+.grid         { display: grid; }
+
+/* Overflow */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+
+/* Width */
+.w-full { width: 100%; }
+
+/* Position */
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+/* Body lock (when overlay open) */
+body.is-locked {
+  overflow: hidden;
+  padding-inline-end: var(--scrollbar-width, 0px);
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ============================================================
+   12. SHARED KEYFRAMES
+   ============================================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.85;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-3deg); }
+  75%      { transform: rotate(3deg); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+
+/* ============================================================
+   13. PRELOAD / FOUC PREVENTION
+   ============================================================ */
+
+/* Prevent flash of unstyled modal/sheet/panel */
+.sheet,
+.panel,
+.modal,
+.toast {
+  will-change: opacity, transform;
+}
+
+/* Prevent FOUC on font load */
+.font-loading body {
+  font-family: 'Tahoma', system-ui, sans-serif;
+}
+
+
+/* ============================================================
+   14. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+/* ============================================================
+   15. HIGH CONTRAST MODE
+   ============================================================ */
+
+@media (prefers-contrast: more) {
+
+  :root {
+    --ink-500: #4F5C74;
+    --ink-400: #6A7791;
+    --color-border: var(--ink-400);
+    --color-border-strong: var(--ink-600);
+  }
+
+  .btn {
+    border-width: 2px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+
+/* ============================================================
+   16. DARK MODE — basic support
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+
+  /* Keep light for now — the design is intentionally warm/paper */
+  /* Uncomment when ready to support dark mode:
+  
+  :root {
+    --paper-50:  #1A1D24;
+    --paper-100: #22262F;
+    --paper-200: #2C313C;
+    --ink-900:   #F6F1E4;
+    --ink-800:   #E8E1CE;
+    --ink-700:   #C9C0A9;
+    --ink-600:   #A8A08B;
+  }
+  
+  */
+}
+
+
+/* ============================================================
+   17. PRINT STYLES
+   ============================================================ */
+
+@media print {
+
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  html,
+  body {
+    background: #FFF !important;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  body::before,
+  body::after {
+    display: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+  }
+
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  p, h2, h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+}
+
+
+/* ============================================================
+   18. MOBILE-SPECIFIC REFINEMENTS
+   ============================================================ */
+
+/* Better tap targets on touch devices */
+@media (hover: none) and (pointer: coarse) {
+
+  a,
+  button,
+  .btn {
+    -webkit-tap-highlight-color: rgba(198, 139, 30, 0.15);
+  }
+
+  /* Increase min tap target to 44px (WCAG) */
+  .site-nav__link,
+  .drawer__nav-link,
+  .faq-item__summary {
+    min-height: 44px;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+
+  body {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+  }
+
+  .site-header {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+
+/* ============================================================
+   19. LANDSCAPE PHONE TWEAK
+   ============================================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+  .hero {
+    padding-block: var(--space-8);
+  }
+
+  .hero__visual {
+    min-height: 200px;
+  }
+
+  .hero__stats {
+    padding-top: var(--space-4);
+  }
+}
+
+
+/* ============================================================
+   20. END OF MAIN.CSS
+   ============================================================ */

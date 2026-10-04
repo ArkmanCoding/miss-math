@@ -1,0 +1,918 @@
+/* ============================================================
+   scroll-effects.css
+   Miss Math — Smooth Scroll & Reveal Animations
+   فاز ۵ — نسخه جامع v2.0.0
+
+   ═══════════════════════════════════════════════════════════
+   OVERVIEW
+   ═══════════════════════════════════════════════════════════
+   Complete visual layer for the scroll effects engine.
+
+   ═══════════════════════════════════════════════════════════
+   WHAT THIS FILE DOES
+   ═══════════════════════════════════════════════════════════
+   01. Native smooth scroll setup
+   02. Reveal base + animation types
+   03. Progress bar styling
+   04. Card hover refinement (fixes warmth.css)
+   05. Sheet/panel/creator overrides
+   06. Section smoothness
+   07. Micro-interactions warmth
+   08. Safe-area handling
+   09. Reduced motion
+   10. Print rules
+   ═══════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════
+   01. NATIVE SMOOTH SCROLL
+   ═══════════════════════════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+/* Fine-tune scroll-behavior on small screens */
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 76px;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   02. REVEAL SYSTEM — BASE
+   ═══════════════════════════════════════════════════════════ */
+
+.reveal-element {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-origin: center top;
+}
+
+/* ─── fade-up ─── */
+.reveal-fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 800ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-fade-up.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── fade-scale ─── */
+.reveal-fade-scale {
+  opacity: 0;
+  transform: scale(0.94) translateY(16px);
+  transition:
+    opacity 850ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 950ms cubic-bezier(0.34, 1.36, 0.64, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-fade-scale.reveal-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ─── fade-in (subtle) ─── */
+.reveal-fade-in {
+  opacity: 0;
+  transition:
+    opacity 850ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-fade-in.reveal-visible {
+  opacity: 1;
+}
+
+/* ─── slide-from-right (RTL: appears from left visually) ─── */
+.reveal-slide-from-right {
+  opacity: 0;
+  transform: translateX(-44px);
+  transition:
+    opacity 750ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-slide-from-right.reveal-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── slide-from-left ─── */
+.reveal-slide-from-left {
+  opacity: 0;
+  transform: translateX(44px);
+  transition:
+    opacity 750ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-slide-from-left.reveal-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── rotate (playful) ─── */
+.reveal-rotate {
+  opacity: 0;
+  transform: translateY(28px) rotate(-2.5deg);
+  transition:
+    opacity 750ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 950ms cubic-bezier(0.34, 1.36, 0.64, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal-rotate.reveal-visible {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   03. HERO SPECIAL — First paint warmth
+   ─── Hero reveals feel more cinematic on first load
+   ═══════════════════════════════════════════════════════════ */
+
+.hero__title.reveal-fade-up {
+  transform: translateY(40px);
+  transition-duration: 1000ms;
+}
+
+.hero__title.reveal-fade-up.reveal-visible {
+  transform: translateY(0);
+}
+
+.hero__badge.reveal-fade-up {
+  transform: translateY(20px);
+  transition-duration: 700ms;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   04. SCROLL PROGRESS BAR
+   ═══════════════════════════════════════════════════════════ */
+
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  height: 3px;
+  background-color: rgba(19, 24, 35, 0.05);
+  z-index: 9998;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.scroll-progress-bar__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    #EDC77A 0%,
+    #DDA83D 35%,
+    #C68B1E 70%,
+    #A06E14 100%);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 100ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 0 8px rgba(221, 168, 61, 0.55),
+    0 0 16px rgba(221, 168, 61, 0.30);
+  will-change: transform;
+}
+
+/* Top of page — extra subtle glow when at start */
+.scroll-progress-bar.is-at-top .scroll-progress-bar__fill {
+  box-shadow:
+    0 0 6px rgba(221, 168, 61, 0.40),
+    0 0 12px rgba(221, 168, 61, 0.20);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   05. CARD STYLING — REFINED HOVER
+   ─── Fix: warmth.css hover was too aggressive
+   ─── New: gentle, vertical, consistent
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Class cards ─── */
+.class-card,
+.testimonial-card,
+.process__step {
+  transition:
+    transform 340ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 360ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms ease,
+    background-color 240ms ease !important;
+  transform-origin: center top;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.class-card:hover,
+.testimonial-card:hover,
+.process__step:hover {
+  transform: translateY(-5px) !important;
+}
+
+/* Override warmth.css alternating rotations */
+.class-card:nth-child(even):hover,
+.class-card:nth-child(odd):hover,
+.testimonial-card:nth-child(even):hover,
+.testimonial-card:nth-child(odd):hover,
+.process__step:nth-child(even):hover,
+.process__step:nth-child(odd):hover {
+  transform: translateY(-5px) !important;
+}
+
+/* ─── Sheet cards — NEVER transform, NEVER rotate ─── */
+.sheet__body .class-card,
+.sheet__body .class-card:hover,
+.sheet__body .class-card:focus-visible,
+.sheet__body .class-card:active,
+.sheet__body .class-card:nth-child(3n+1),
+.sheet__body .class-card:nth-child(3n+2),
+.sheet__body .class-card:nth-child(3n),
+.sheet__body .class-card:nth-child(3n+1):hover,
+.sheet__body .class-card:nth-child(3n+2):hover,
+.sheet__body .class-card:nth-child(3n):hover {
+  transform: translateY(0) !important;
+}
+
+.sheet__body .class-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    5px 6px 0 0 var(--ink-900, #131823),
+    0 12px 24px rgba(78, 52, 24, 0.14),
+    0 4px 8px rgba(78, 52, 24, 0.06) !important;
+}
+
+/* ─── Panel detail — never move on hover ─── */
+.panel__body .detail-info__item,
+.panel__body .detail-info__item:hover,
+.panel__body .detail-price,
+.panel__body .detail-note,
+.panel__body .detail-syllabus__item,
+.panel__body .detail-syllabus__item:hover {
+  transform: none !important;
+}
+
+/* ─── Creator modal — gentler hover ─── */
+.creator-skill:hover,
+.creator-project:hover,
+.creator-stat:hover,
+.creator-contact__link:hover {
+  transform: translateY(-2px) !important;
+}
+
+.creator-contact__link:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+.creator-avatar__inner:hover {
+  transform: rotate(-3deg) scale(1.04) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   06. FAQ SMOOTHNESS
+   ═══════════════════════════════════════════════════════════ */
+
+.faq-item {
+  transition:
+    transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 340ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms ease,
+    background-color 240ms ease !important;
+}
+
+.faq-item:hover {
+  transform: translateY(-2px) !important;
+}
+
+.faq-item[open] {
+  transform: translateY(-2px) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   07. SECTION DIVIDERS — SMOOTHER TRANSITIONS
+   ═══════════════════════════════════════════════════════════ */
+
+section + section {
+  position: relative;
+}
+
+section + section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(19, 24, 35, 0.05) 25%,
+    rgba(19, 24, 35, 0.08) 50%,
+    rgba(19, 24, 35, 0.05) 75%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hide dividers between specific pairs */
+.hero + .trust-bar::before,
+.trust-bar + .about::before,
+.classes + .process::before,
+.site-footer + section::before {
+  display: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   08. ANTI-JUMP — IMAGES
+   ═══════════════════════════════════════════════════════════ */
+
+img {
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+img[data-loading="true"],
+img.is-loading {
+  opacity: 0;
+}
+
+img[data-loading="false"],
+img.is-loaded {
+  opacity: 1;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   09. SAFETY FALLBACK
+   ─── If JS fails, reveal after 2.5s
+   ═══════════════════════════════════════════════════════════ */
+
+.reveal-element:not(.reveal-visible) {
+  animation: reveal-safety 0s linear 2.5s forwards;
+}
+
+@keyframes reveal-safety {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   10. INTERACTIVE TRANSITIONS — GLOBAL SMOOTHNESS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Smooth transitions on interactive elements */
+a,
+button,
+.btn,
+button[type="button"],
+button[type="submit"],
+input,
+textarea,
+select {
+  transition-property: color, background-color, border-color,
+                      box-shadow, transform, opacity;
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tap highlight */
+a,
+button,
+.btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   11. SCROLL SNAP — SUBTLE FOR HORIZONTAL SCROLLERS
+   ═══════════════════════════════════════════════════════════ */
+
+.testimonials__grid {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sheet__body {
+  scroll-behavior: smooth;
+}
+
+.panel__body {
+  scroll-behavior: smooth;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   12. LINK UNDERLINE TRANSITIONS
+   ═══════════════════════════════════════════════════════════ */
+
+.site-footer__nav a,
+.site-footer__link {
+  transition:
+    color 240ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 240ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-footer__nav a::after,
+.site-footer__link::after {
+  transition: transform 340ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   13. SMOOTH ACCORDION
+   ═══════════════════════════════════════════════════════════ */
+
+details,
+details[open] {
+  transition:
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 320ms ease;
+}
+
+details > summary {
+  transition:
+    color 220ms ease,
+    background-color 220ms ease;
+}
+
+details > summary::after,
+details > summary::-webkit-details-marker {
+  transition: transform 380ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   14. HERO DECO — SLOWER DRIFT
+   ═══════════════════════════════════════════════════════════ */
+
+.hero__deco,
+.hero__card {
+  transition:
+    opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   15. SMOOTH SHEET / MODAL / PANEL OPENING
+   ═══════════════════════════════════════════════════════════ */
+
+.sheet__panel,
+.modal__dialog,
+.panel {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   16. FLOATING CTA — ALWAYS SMOOTH HOVER
+   ═══════════════════════════════════════════════════════════ */
+
+.float-cta {
+  transition:
+    transform 240ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 240ms ease !important;
+}
+
+.float-cta:hover {
+  transform: translate(-2px, -3px) !important;
+}
+
+.float-cta:active {
+  transform: translate(2px, 2px) !important;
+  transition-duration: 80ms !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   17. TO-TOP BUTTON — SMOOTH
+   ═══════════════════════════════════════════════════════════ */
+
+.to-top {
+  transition:
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 380ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 260ms ease !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   18. FOCUS RING — SMOOTH
+   ═══════════════════════════════════════════════════════════ */
+
+*:focus-visible {
+  transition:
+    outline-color 180ms ease,
+    outline-offset 180ms ease,
+    border-radius 180ms ease;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   19. SECTION SCROLL MARGIN — CLEAN ANCHOR JUMPS
+   ═══════════════════════════════════════════════════════════ */
+
+[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (max-width: 640px) {
+  [id] {
+    scroll-margin-top: 76px;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   20. VIEW TRANSITIONS API SUPPORT (progressive enhancement)
+   ═══════════════════════════════════════════════════════════ */
+
+@supports (view-transition-name: none) {
+  .hero,
+  .about,
+  .classes,
+  .testimonials {
+    view-transition-name: none;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   21. SMOOTHNESS FOR LOADED FONTS
+   ═══════════════════════════════════════════════════════════ */
+
+body.fonts-loading {
+  opacity: 0.98;
+}
+
+body.fonts-loaded {
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   22. SCROLL-EFFECTS READY MARKER
+   ─── When JS is running, hide the safety fallback
+   ═══════════════════════════════════════════════════════════ */
+
+body.scroll-effects-ready .reveal-element:not(.reveal-visible) {
+  animation: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   23. SMOOTH SCROLL BAR (webkit)
+   ═══════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-100, #F6F1E4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-400, #98A3B8);
+  border-radius: 999px;
+  border: 3px solid var(--paper-100, #F6F1E4);
+  transition: background-color 240ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mustard-600, #A06E14);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   24. SCROLL INDICATOR ON MOBILE — REDUCED EFFECT
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .reveal-fade-up,
+  .reveal-fade-scale,
+  .reveal-rotate {
+    transform: translateY(24px) scale(0.98);
+  }
+
+  .reveal-fade-up.reveal-visible,
+  .reveal-fade-scale.reveal-visible,
+  .reveal-rotate.reveal-visible {
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   25. TABLET ADJUSTMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+@media (min-width: 641px) and (max-width: 959px) {
+  .reveal-slide-from-right {
+    transform: translateX(-32px);
+  }
+
+  .reveal-slide-from-left {
+    transform: translateX(32px);
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   26. DESKTOP ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+@media (min-width: 960px) {
+  .reveal-fade-up {
+    transform: translateY(40px);
+  }
+
+  .reveal-fade-scale {
+    transform: scale(0.92) translateY(24px);
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   27. PREFERS REDUCED MOTION — FULL STOP
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-element,
+  [class*="reveal-"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .scroll-progress-bar {
+    display: none !important;
+  }
+
+  .class-card:hover,
+  .testimonial-card:hover,
+  .process__step:hover,
+  .faq-item:hover,
+  .creator-skill:hover,
+  .creator-project:hover,
+  .creator-stat:hover,
+  .creator-contact__link:hover,
+  .float-cta:hover,
+  .to-top:hover {
+    transform: none !important;
+  }
+
+  .sheet__body .class-card:hover {
+    transform: none !important;
+  }
+
+  section + section::before {
+    display: none;
+  }
+
+  .reveal-element:not(.reveal-visible) {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   28. PREFERS CONTRAST
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-contrast: more) {
+  .scroll-progress-bar__fill {
+    box-shadow: none;
+    background: #7A5310;
+  }
+
+  .reveal-element {
+    will-change: auto;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   29. SAVE DATA — REDUCE ANIMATIONS
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-data: reduce) {
+  .reveal-element {
+    transition-duration: 400ms !important;
+    will-change: auto;
+  }
+
+  .scroll-progress-bar {
+    box-shadow: none;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   30. SAFE AREA
+   ═══════════════════════════════════════════════════════════ */
+
+@supports (padding: env(safe-area-inset-top)) {
+  .scroll-progress-bar {
+    top: env(safe-area-inset-top, 0px);
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   31. PRINT RULES
+   ═══════════════════════════════════════════════════════════ */
+
+@media print {
+  .scroll-progress-bar {
+    display: none !important;
+  }
+
+  .reveal-element,
+  [class*="reveal-"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  section + section::before {
+    display: none;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   32. CONTAINMENT — prevent layout thrashing
+   ═══════════════════════════════════════════════════════════ */
+
+.reveal-element {
+  contain: layout style;
+}
+
+/* But NOT on elements that might grow (like cards with hover) */
+.class-card.reveal-element,
+.testimonial-card.reveal-element,
+.process__step.reveal-element,
+.faq-item.reveal-element {
+  contain: layout;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   33. SMOOTH HOVER ON NAV LINKS
+   ═══════════════════════════════════════════════════════════ */
+
+.site-nav__link {
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    transform 260ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 260ms ease !important;
+}
+
+.site-nav__link:hover {
+  transform: translateY(-1px);
+}
+
+.site-nav__link.is-active {
+  transition-duration: 180ms;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   34. SMOOTH DRAWER LINKS
+   ═══════════════════════════════════════════════════════════ */
+
+.drawer__nav-link {
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    transform 240ms cubic-bezier(0.34, 1.4, 0.64, 1) !important;
+}
+
+.drawer__nav-link:hover {
+  transform: translateX(-4px);
+}
+
+.drawer__nav-link > svg {
+  transition:
+    transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    color 240ms ease !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   35. SMOOTH BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+
+.btn {
+  transition:
+    background-color 240ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 240ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 240ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.34, 1.4, 0.64, 1) !important;
+}
+
+.btn:active {
+  transition-duration: 80ms !important;
+}
+
+.btn > svg {
+  transition:
+    transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    color 240ms ease !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   36. SMOOTH BADGES
+   ═══════════════════════════════════════════════════════════ */
+
+.badge {
+  transition:
+    transform 300ms cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 240ms ease !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   37. DISABLE REVEAL ON LIST SCROLL AREAS
+   ─── Prevents weird reveal inside horizontally scrolling lists
+   ═══════════════════════════════════════════════════════════ */
+
+.testimonials__grid .testimonial-card {
+  transition-delay: 0ms !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   38. SMOOTH PROGRESS INDICATOR BELOW HEADER
+   ═══════════════════════════════════════════════════════════ */
+
+.site-header.is-scrolled {
+  transition:
+    background-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 320ms ease !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   39. SCROLL EFFECTS READY STATE
+   ═══════════════════════════════════════════════════════════ */
+
+body.scroll-effects-ready {
+  overflow-x: hidden;
+}
+
+body.scroll-effects-ready .scroll-progress-bar {
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+body:not(.scroll-effects-ready) .scroll-progress-bar {
+  opacity: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   40. END OF SCROLL-EFFECTS.CSS
+   ═══════════════════════════════════════════════════════════ */

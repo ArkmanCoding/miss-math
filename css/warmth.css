@@ -1,0 +1,677 @@
+/* ============================================================
+   warmth.css
+   Miss Math — Warmth & Fixes Patch
+   فاز ۵ — نسخه v1.0.0
+
+   ─── PURPOSE ──────────────────────────────────────────────
+   Loaded LAST (after creator.css).
+   Overrides dry/sterile defaults with warm, human touches.
+
+   ─── WHAT THIS FILE DOES ──────────────────────────────────
+   1. Kills Persian drop caps (broken ::first-letter)
+   2. Warms up the palette — richer colors, brown-tinted shadows
+   3. Adds personality to hovers — rotation, scale, character
+   4. Warms section backgrounds with subtle gradients
+   5. Hand-drawn feeling on decorative elements
+   6. Softer typography rhythm
+   7. More organic shapes and micro-interactions
+
+   ─── SAFE OVERRIDE ────────────────────────────────────────
+   Uses higher specificity + !important where needed.
+   No HTML changes required except one <link> tag.
+   ============================================================ */
+
+
+/* ═══════════════════════════════════════════════════════════
+   01. KILL PERSIAN DROP CAPS
+   ─── ::first-letter separates Persian letters ("ک" + "ارشناس")
+   ─── Force reset on every selector that might trigger it
+   ═══════════════════════════════════════════════════════════ */
+
+.about__bio::first-letter,
+.hero__lead::first-letter,
+.detail-desc::first-letter,
+.creator-bio::first-letter,
+.creator-project__desc::first-letter,
+.creator-footnote::first-letter,
+.dl-lead::first-letter,
+.dl-card__desc::first-letter,
+.dl-benefit__text::first-letter,
+.dl-step__text::first-letter,
+.notice__text::first-letter,
+.prize-ticket__desc::first-letter,
+.prize-ticket__title::first-letter,
+.site-footer__brand p::first-letter,
+.location__card-body p::first-letter,
+.faq-item__content p::first-letter,
+.process__step-text::first-letter,
+.testimonial-card__text::first-letter,
+.class-card__desc::first-letter,
+.panel__body p::first-letter,
+.modal__body p::first-letter {
+  float: none !important;
+  display: inline !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  font-style: inherit !important;
+  font-family: inherit !important;
+  color: inherit !important;
+  background: none !important;
+  text-shadow: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  transform: none !important;
+  letter-spacing: inherit !important;
+  position: static !important;
+}
+
+/* Fix any odd word-break behavior on Persian text */
+[lang="fa"] p,
+[dir="rtl"] p,
+.about__bio,
+.hero__lead,
+.detail-desc,
+.creator-bio,
+.faq-item__content,
+.testimonial-card__text {
+  word-break: normal !important;
+  overflow-wrap: break-word;
+  hyphens: none;
+  text-align: justify;
+  text-align-last: right;
+  letter-spacing: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   02. WARM SHADOW SYSTEM
+   ─── Replace grey shadows with brown-tinted ones
+   ─── Warmer feel, more human, less "digital"
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Re-declare with warmth */
+  --warm-shadow-xs: 0 1px 2px rgba(78, 52, 24, 0.06);
+  --warm-shadow-sm: 0 2px 6px rgba(78, 52, 24, 0.08), 0 1px 2px rgba(78, 52, 24, 0.04);
+  --warm-shadow-md: 0 6px 16px rgba(78, 52, 24, 0.10), 0 2px 6px rgba(78, 52, 24, 0.05);
+  --warm-shadow-lg: 0 14px 32px rgba(78, 52, 24, 0.14), 0 4px 10px rgba(78, 52, 24, 0.06);
+  --warm-shadow-xl: 0 24px 56px rgba(78, 52, 24, 0.16), 0 8px 16px rgba(78, 52, 24, 0.08);
+
+  --warm-glow-amber: 0 8px 24px rgba(217, 119, 6, 0.20);
+  --warm-glow-amber-hover: 0 14px 36px rgba(217, 119, 6, 0.30);
+
+  /* Warmer cream layers */
+  --warm-bg: #FBF7EE;
+  --warm-bg-alt: #F5EFE0;
+  --warm-surface: #FFFDFA;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   03. WARM SECTION BACKGROUNDS
+   ─── Replace flat cream with subtle warm gradients
+   ─── Gives depth without being heavy
+   ═══════════════════════════════════════════════════════════ */
+
+.hero {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(245, 222, 171, 0.30) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 90% 90%, rgba(199, 222, 224, 0.18) 0%, transparent 55%),
+    linear-gradient(180deg, #FDFAF4 0%, #FBF7EE 60%, #F7F1E2 100%) !important;
+}
+
+.about {
+  background:
+    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(237, 199, 122, 0.14) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #FEFCF7 100%) !important;
+}
+
+.classes {
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 30%, rgba(199, 222, 224, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #FBF7EE 0%, #F5EFE0 100%) !important;
+}
+
+.process {
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(237, 199, 122, 0.10) 0%, transparent 55%),
+    linear-gradient(180deg, #F5EFE0 0%, #FAF4E6 100%) !important;
+}
+
+.testimonials {
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 50%, rgba(245, 222, 171, 0.16) 0%, transparent 55%),
+    linear-gradient(180deg, #FFFDFA 0%, #FBF7EE 100%) !important;
+}
+
+.faq {
+  background:
+    linear-gradient(180deg, #FBF7EE 0%, #F7F1E2 100%) !important;
+}
+
+.location {
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(194, 94, 58, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #FEFCF7 100%) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   04. WARMER BODY PAPER TEXTURE
+   ─── More pronounced grain, warmer tint
+   ═══════════════════════════════════════════════════════════ */
+
+body::before {
+  opacity: 0.055 !important;
+  mix-blend-mode: multiply !important;
+}
+
+body {
+  background-color: var(--warm-bg) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   05. PLAYFUL BUTTONS
+   ─── More character in hovers, softer corners, richer feel
+   ═══════════════════════════════════════════════════════════ */
+
+.btn {
+  transition:
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease !important;
+}
+
+.btn:hover {
+  transform: translate(-2px, -3px) rotate(-0.5deg) !important;
+}
+
+.btn:active {
+  transform: translate(2px, 2px) rotate(0deg) !important;
+}
+
+/* Primary — richer amber gradient */
+.btn--primary {
+  background:
+    linear-gradient(180deg,
+      #F4C57A 0%,
+      #DDA83D 45%,
+      #C68B1E 100%) !important;
+  border-color: #7A5310 !important;
+  color: #1A1207 !important;
+  box-shadow:
+    4px 4px 0 0 #7A5310,
+    0 10px 24px rgba(198, 139, 30, 0.28),
+    0 4px 8px rgba(198, 139, 30, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(122, 83, 16, 0.20) !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+.btn--primary:hover {
+  background:
+    linear-gradient(180deg,
+      #F7D18D 0%,
+      #E8B247 45%,
+      #CE9628 100%) !important;
+  transform: translate(-3px, -4px) rotate(-0.8deg) !important;
+  box-shadow:
+    6px 7px 0 0 #7A5310,
+    0 18px 40px rgba(198, 139, 30, 0.36),
+    0 6px 14px rgba(198, 139, 30, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(122, 83, 16, 0.22) !important;
+}
+
+.btn--primary:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow:
+    1px 1px 0 0 #7A5310,
+    0 3px 8px rgba(198, 139, 30, 0.20),
+    inset 0 3px 6px rgba(122, 83, 16, 0.24) !important;
+}
+
+/* Ghost — warmer */
+.btn--ghost {
+  border-color: rgba(19, 24, 35, 0.22) !important;
+  background: rgba(255, 253, 250, 0.6) !important;
+  color: #2F3A4F !important;
+}
+
+.btn--ghost:hover {
+  background: #FDF9EE !important;
+  border-color: var(--mustard-500, #C68B1E) !important;
+  color: #7A5310 !important;
+}
+
+/* Outline — warmer */
+.btn--outline {
+  background: linear-gradient(180deg, #FFFDFA 0%, #FBF7EE 100%) !important;
+  border-color: var(--mustard-500, #C68B1E) !important;
+  box-shadow:
+    3px 3px 0 0 var(--mustard-500, #C68B1E),
+    0 6px 14px rgba(198, 139, 30, 0.14) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   06. PLAYFUL CARDS
+   ─── More rotation, warmer shadows, more character
+   ═══════════════════════════════════════════════════════════ */
+
+.class-card,
+.testimonial-card,
+.process__step,
+.faq-item {
+  box-shadow:
+    4px 4px 0 0 var(--ink-900, #131823),
+    0 8px 20px rgba(78, 52, 24, 0.10),
+    0 3px 8px rgba(78, 52, 24, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(19, 24, 35, 0.03) !important;
+  transition:
+    transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 340ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms ease !important;
+}
+
+.class-card:hover,
+.testimonial-card:hover,
+.process__step:hover {
+  transform: translate(-3px, -4px) rotate(-0.6deg) !important;
+  box-shadow:
+    7px 8px 0 0 var(--ink-900, #131823),
+    0 18px 40px rgba(78, 52, 24, 0.16),
+    0 6px 14px rgba(78, 52, 24, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 3px rgba(19, 24, 35, 0.04) !important;
+}
+
+/* Alternate rotation for organic feel */
+.class-card:nth-child(even):hover,
+.testimonial-card:nth-child(even):hover {
+  transform: translate(-3px, -4px) rotate(0.6deg) !important;
+}
+
+.process__step:nth-child(even):hover {
+  transform: translate(-3px, -4px) rotate(0.8deg) !important;
+}
+
+.process__step:nth-child(odd):hover {
+  transform: translate(-3px, -4px) rotate(-0.8deg) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   07. WARMER BADGES & TAGS
+   ═══════════════════════════════════════════════════════════ */
+
+.badge {
+  box-shadow:
+    2px 2px 0 0 var(--ink-900, #131823),
+    0 4px 10px rgba(78, 52, 24, 0.08) !important;
+}
+
+.badge--accent {
+  background:
+    linear-gradient(135deg, #F5DEAB 0%, #EDC77A 100%) !important;
+  box-shadow:
+    2px 2px 0 0 var(--ink-900, #131823),
+    0 6px 14px rgba(198, 139, 30, 0.20) !important;
+}
+
+.class-card__type {
+  box-shadow:
+    2px 2px 0 0 var(--ink-900, #131823),
+    0 4px 10px rgba(78, 52, 24, 0.12) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   08. WARMER HEADINGS & TITLE UNDERLINE
+   ─── Make the underline more hand-drawn feeling
+   ═══════════════════════════════════════════════════════════ */
+
+.title-underline::after {
+  background:
+    linear-gradient(90deg,
+      rgba(245, 222, 171, 0.9) 0%,
+      rgba(237, 199, 122, 1) 50%,
+      rgba(221, 168, 61, 0.9) 100%) !important;
+  transform: skewX(-9deg) rotate(-1.2deg) !important;
+  bottom: 0.06em !important;
+  height: 0.34em !important;
+  border-radius: 4px 2px 4px 2px !important;
+  box-shadow:
+    1px 1px 0 rgba(19, 24, 35, 0.06),
+    inset 0 -1px 0 rgba(122, 83, 16, 0.14) !important;
+}
+
+.section-title {
+  letter-spacing: -0.028em !important;
+}
+
+.hero__title-accent::before,
+.hero__title-accent::after {
+  background:
+    linear-gradient(90deg,
+      rgba(245, 222, 171, 1) 0%,
+      rgba(221, 168, 61, 1) 100%) !important;
+  transform: skewX(-9deg) rotate(-1.2deg) !important;
+  border-radius: 4px 2px 4px 2px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   09. WARMER ICON BOXES
+   ─── More character, richer gradients
+   ═══════════════════════════════════════════════════════════ */
+
+.about__check,
+.trust-item__icon,
+.location__icon,
+.process__step-num,
+.detail-info__icon,
+.detail-syllabus__num {
+  box-shadow:
+    2px 2px 0 0 var(--ink-900, #131823),
+    0 4px 10px rgba(78, 52, 24, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 2px rgba(122, 83, 16, 0.14) !important;
+  transition:
+    transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 340ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   10. WARMER HERO VISUAL
+   ─── Add warmth to hero card and decorations
+   ═══════════════════════════════════════════════════════════ */
+
+.hero__card {
+  box-shadow:
+    6px 6px 0 0 var(--ink-900, #131823),
+    0 20px 44px rgba(78, 52, 24, 0.16),
+    0 8px 16px rgba(78, 52, 24, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.hero__card-icon {
+  background:
+    linear-gradient(135deg, #F5DEAB 0%, #EDC77A 50%, #DDA83D 100%) !important;
+  box-shadow:
+    3px 3px 0 0 var(--ink-900, #131823),
+    0 6px 14px rgba(198, 139, 30, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+}
+
+.hero__deco {
+  opacity: 0.62 !important;
+  filter: drop-shadow(0 4px 10px rgba(198, 139, 30, 0.20)) !important;
+}
+
+.hero__stat-num {
+  color: #7A5310 !important;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7),
+    1px 1px 0 rgba(122, 83, 16, 0.10) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   11. WARMER TRUST BAR
+   ═══════════════════════════════════════════════════════════ */
+
+.trust-bar {
+  background:
+    linear-gradient(180deg, #F5EFE0 0%, #EFE7D2 100%) !important;
+  border-block-color: rgba(19, 24, 35, 0.10) !important;
+}
+
+.trust-item strong {
+  color: #7A5310 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   12. MICRO-INTERACTIONS
+   ─── Small delightful touches on key elements
+   ═══════════════════════════════════════════════════════════ */
+
+/* Logo mark — subtle wiggle on hover */
+.logo:hover .logo__mark {
+  transform: rotate(-8deg) scale(1.08) !important;
+}
+
+/* Stat numbers — pulse on hero load */
+.hero__stat-num {
+  font-family: 'Vazirmatn';
+  display: inline-block;
+  font-size: 27px;
+}
+
+/* FAQ summary icon — more bounce */
+.faq-item__icon {
+  transition:
+    transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 260ms ease,
+    color 260ms ease !important;
+}
+
+/* Process number — playful rotate on hover */
+.process__step:hover .process__step-num {
+  transform: rotate(8deg) scale(1.12) !important;
+  box-shadow:
+    4px 4px 0 0 var(--ink-900, #131823),
+    0 8px 18px rgba(198, 139, 30, 0.24) !important;
+}
+
+/* Social proof avatar */
+.testimonial-card__avatar {
+  box-shadow:
+    2px 2px 0 0 var(--ink-900, #131823),
+    0 6px 14px rgba(198, 139, 30, 0.24) !important;
+}
+
+.testimonial-card:hover .testimonial-card__avatar {
+  transform: rotate(6deg) scale(1.08) !important;
+}
+
+/* CTA buttons — pulse dot */
+.float-cta__pulse {
+  background: #FFE24A !important;
+  box-shadow:
+    0 0 0 2px #1F5C33,
+    0 0 12px rgba(255, 226, 74, 0.6) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   13. WARMER FOOTER
+   ═══════════════════════════════════════════════════════════ */
+
+.site-footer {
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(221, 168, 61, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 85% 100%, rgba(79, 156, 161, 0.10) 0%, transparent 55%),
+    linear-gradient(180deg, #131823 0%, #0A0E17 100%) !important;
+}
+
+.site-footer__signature {
+  color: #F5DEAB !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   14. TYPOGRAPHY WARMTH
+   ─── Softer rhythm, better for Persian reading
+   ═══════════════════════════════════════════════════════════ */
+
+body,
+p,
+.hero__lead,
+.about__bio,
+.section-lead,
+.detail-desc {
+  letter-spacing: -0.003em !important;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.028em !important;
+}
+
+.section-eyebrow {
+  letter-spacing: 0.14em !important;
+  color: #A06E14 !important;
+}
+
+/* Better line-height for Persian */
+p {
+  line-height: 1.95 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   15. WARMER ANNOUNCEMENT BAR
+   ═══════════════════════════════════════════════════════════ */
+
+.announce-bar {
+  background:
+    linear-gradient(90deg, #1A2332 0%, #2F3A4F 50%, #1A2332 100%) !important;
+}
+
+.announce-bar__icon {
+  color: #F5DEAB !important;
+  filter: drop-shadow(0 2px 4px rgba(221, 168, 61, 0.4));
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   16. WARMER SHEET / MODAL SHELLS
+   ═══════════════════════════════════════════════════════════ */
+
+.sheet__panel,
+.modal__dialog,
+.panel {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(237, 199, 122, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 90%, rgba(199, 222, 224, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, #FDFAF4 0%, #F7F1E2 100%) !important;
+}
+
+.modal__dialog {
+  box-shadow:
+    8px 8px 0 0 var(--ink-900, #131823),
+    0 32px 72px rgba(78, 52, 24, 0.28),
+    0 12px 32px rgba(78, 52, 24, 0.16),
+    inset 0 2px 0 rgba(255, 255, 255, 0.85) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   17. WARMER DIVIDERS & SEPARATORS
+   ═══════════════════════════════════════════════════════════ */
+
+.site-footer__copy {
+  color: rgba(245, 222, 171, 0.45) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   18. FLOATING CTA — extra warmth
+   ═══════════════════════════════════════════════════════════ */
+
+.float-cta {
+  background:
+    linear-gradient(180deg,
+      #4BC26C 0%,
+      #3FA95A 45%,
+      #2C8B47 100%) !important;
+  border-color: #1F5C33 !important;
+  box-shadow:
+    5px 5px 0 0 #1F5C33,
+    0 14px 32px rgba(31, 92, 51, 0.32),
+    0 6px 14px rgba(31, 92, 51, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -2px 4px rgba(15, 60, 30, 0.20) !important;
+}
+
+.float-cta:hover {
+  transform: translate(-2px, -3px) !important;
+  background:
+    linear-gradient(180deg,
+      #57CC78 0%,
+      #4BC26C 45%,
+      #33A052 100%) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   19. WARMER TO-TOP BUTTON
+   ═══════════════════════════════════════════════════════════ */
+
+.to-top {
+  box-shadow:
+    4px 4px 0 0 var(--ink-900, #131823),
+    0 8px 20px rgba(78, 52, 24, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+}
+
+.to-top:hover {
+  background: linear-gradient(180deg, #F5DEAB 0%, #EDC77A 100%) !important;
+  transform: translate(-2px, -2px) rotate(-8deg) !important;
+  box-shadow:
+    6px 6px 0 0 var(--ink-900, #131823),
+    0 12px 28px rgba(198, 139, 30, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   20. GLOBAL SMOOTHNESS
+   ─── Better focus rings, better transitions
+   ═══════════════════════════════════════════════════════════ */
+
+*:focus-visible {
+  outline: 3px solid rgba(221, 168, 61, 0.65) !important;
+  outline-offset: 3px !important;
+  border-radius: 6px !important;
+}
+
+/* Links — warmer hover */
+a {
+  transition: color 220ms ease !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   21. REDUCED MOTION RESPECT
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover,
+  .class-card:hover,
+  .testimonial-card:hover,
+  .process__step:hover,
+  .float-cta:hover,
+  .to-top:hover {
+    transform: none !important;
+  }
+
+  .logo:hover .logo__mark,
+  .process__step:hover .process__step-num,
+  .testimonial-card:hover .testimonial-card__avatar {
+    transform: none !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   22. END OF WARMTH.CSS
+   ═══════════════════════════════════════════════════════════ */

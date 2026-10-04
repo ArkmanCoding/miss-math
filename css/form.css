@@ -1,0 +1,1477 @@
+/* ============================================================
+   form.css
+   Miss Math — Registration Form Styles
+   فاز ۳ — نسخه کامل v2.0.0
+
+   ─── DESIGN LANGUAGE ──────────────────────────────────────
+   "Notebook Page × Letterpress Form"
+   • Paper background with subtle grid
+   • Hard offset shadows (not soft glows)
+   • Asymmetric radii for physical feel
+   • Warm palette: cream, ink, mustard, rust
+   • Every state has visual personality
+
+   ─── SCOPE ────────────────────────────────────────────────
+   Styles everything rendered into #modal-register-body by
+   form.js v5.0.0:
+     • Form wrapper
+     • Context banner
+     • Intro text
+     • Progress bar
+     • Fields (label, input, hint, counter, error)
+     • Actions
+     • Legal note
+     • Success view
+     • All states (focus, error, success, disabled)
+
+   ─── TOKENS (fallback-safe) ───────────────────────────────
+   Uses project tokens when available, falls back to literals.
+   ============================================================ */
+
+
+/* ============================================================
+   1. MODAL SHELL — register variant
+   ============================================================ */
+
+#modal-register .modal__dialog {
+  max-width: 520px;
+  background-color: var(--paper-50, #FBF8F0);
+  background-image:
+    linear-gradient(rgba(19, 24, 35, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19, 24, 35, 0.028) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-position: center top;
+}
+
+#modal-register .modal__header {
+  background: linear-gradient(180deg,
+    var(--mustard-100, #FAEFD3) 0%,
+    var(--paper-50, #FBF8F0) 100%);
+  border-bottom: 2px solid var(--ink-900, #131823);
+}
+
+#modal-register .modal__title {
+  color: var(--ink-900, #131823);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+#modal-register .modal__body {
+  padding: 0;
+  background-color: transparent;
+}
+
+
+/* ============================================================
+   2. FORM WRAPPER
+   ============================================================ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem 1.25rem 1.75rem;
+  font-family: 'Vazirmatn', 'Tahoma', system-ui, sans-serif;
+  color: var(--ink-900, #131823);
+  position: relative;
+}
+
+@media (min-width: 520px) {
+  .form {
+    padding: 1.75rem 1.5rem 2rem;
+    gap: 1.375rem;
+  }
+}
+
+
+/* ============================================================
+   3. FORM CONTEXT BANNER — class info at top
+   ============================================================ */
+
+.form-context {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0.875rem;
+  align-items: center;
+  padding: 0.9375rem 1rem;
+  background-color: #FFFFFF;
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 16px 16px 16px 4px;
+  box-shadow: 3px 3px 0 0 var(--ink-900, #131823);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle stripe pattern */
+.form-context::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 10px,
+    rgba(221, 168, 61, 0.06) 10px,
+    rgba(221, 168, 61, 0.06) 11px
+  );
+  pointer-events: none;
+}
+
+.form-context__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg,
+    var(--mustard-300, #EDC77A) 0%,
+    var(--mustard-400, #DDA83D) 100%);
+  color: var(--ink-950, #0A0E17);
+  border: 1.5px solid var(--ink-900, #131823);
+  border-radius: 12px 12px 12px 4px;
+  box-shadow: 2px 2px 0 0 var(--ink-900, #131823);
+  flex-shrink: 0;
+  transform: rotate(-3deg);
+  position: relative;
+  z-index: 1;
+}
+
+.form-context__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.form-context__title {
+  font-size: 0.9375rem;
+  font-weight: 900;
+  color: var(--ink-900, #131823);
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-context__code {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-500, #6A7791);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.form-context__code strong {
+  color: var(--mustard-700, #7A5310);
+  background-color: var(--mustard-100, #FAEFD3);
+  padding: 0.125rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  direction: ltr;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.6875rem;
+}
+
+
+/* ============================================================
+   4. FORM INTRO
+   ============================================================ */
+
+.form-intro {
+  padding: 0.9375rem 1rem;
+  background-color: var(--mustard-100, #FAEFD3);
+  border: 1.5px dashed var(--mustard-400, #DDA83D);
+  border-radius: 12px;
+  position: relative;
+}
+
+.form-intro__text {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--mustard-700, #7A5310);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.form-intro::before {
+  content: '✱';
+  position: absolute;
+  top: -10px;
+  inset-inline-end: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: var(--mustard-500, #C68B1E);
+  color: #FFFFFF;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-900, #131823);
+  font-size: 0.75rem;
+  font-weight: 900;
+  transform: rotate(12deg);
+}
+
+
+/* ============================================================
+   5. PROGRESS BAR
+   ============================================================ */
+
+.form-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--ink-900, #131823);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 0 var(--ink-200, #DEE3EB);
+  transition: box-shadow 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.form-progress.is-complete {
+  box-shadow: 2px 2px 0 0 var(--success-600, #2F7A47);
+  border-color: var(--success-600, #2F7A47);
+}
+
+.form-progress__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.form-progress__title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-500, #6A7791);
+}
+
+.form-progress.is-complete .form-progress__title {
+  color: var(--success-600, #2F7A47);
+}
+
+.form-progress__count {
+  font-size: 0.8125rem;
+  font-weight: 900;
+  color: var(--mustard-700, #7A5310);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.form-progress.is-complete .form-progress__count {
+  color: var(--success-600, #2F7A47);
+}
+
+.form-progress__current {
+  font-size: 0.9375rem;
+}
+
+.form-progress__track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background-color: var(--paper-100, #F6F1E4);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--ink-200, #DEE3EB);
+}
+
+.form-progress__fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,
+    var(--mustard-400, #DDA83D) 0%,
+    var(--mustard-500, #C68B1E) 100%);
+  border-radius: 4px;
+  transition: width 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 300ms ease;
+  position: relative;
+}
+
+.form-progress__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  animation: progress-shine 1.8s ease-in-out infinite;
+}
+
+@keyframes progress-shine {
+  0%, 100% { transform: translateX(-100%); }
+  50%      { transform: translateX(100%); }
+}
+
+.form-progress.is-complete .form-progress__fill {
+  background: linear-gradient(90deg,
+    var(--success-600, #2F7A47) 0%,
+    #3FA95A 100%);
+}
+
+.form-progress.is-complete .form-progress__fill::after {
+  animation: none;
+}
+
+
+/* ============================================================
+   6. FORM FIELDS WRAPPER
+   ============================================================ */
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+
+/* ============================================================
+   7. FORM FIELD
+   ============================================================ */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  position: relative;
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-field.is-focused {
+  transform: translateX(-2px);
+}
+
+
+/* ============================================================
+   8. LABELS
+   ============================================================ */
+
+.form-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--ink-800, #1E2637);
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.form-label__text {
+  flex: 1;
+}
+
+.form-field.is-focused .form-label {
+  color: var(--mustard-700, #7A5310);
+}
+
+.form-field.has-error .form-label {
+  color: var(--rust-600, #A64B2A);
+}
+
+.form-field.has-success .form-label {
+  color: var(--success-600, #2F7A47);
+}
+
+.form-label__required {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: var(--rust-500, #C25E3A);
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 900;
+  line-height: 1;
+  transform: rotate(-8deg);
+  box-shadow: 1px 1px 0 0 var(--ink-900, #131823);
+  flex-shrink: 0;
+}
+
+.form-label__optional {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink-400, #98A3B8);
+  letter-spacing: 0;
+  padding-inline-start: 0.25rem;
+}
+
+
+/* ============================================================
+   9. INPUTS — base styles
+   ============================================================ */
+
+.form-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink-900, #131823);
+  background-color: #FFFFFF;
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 12px;
+  outline: none;
+  box-shadow: 3px 3px 0 0 var(--ink-200, #DEE3EB);
+  transition:
+    border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 200ms ease,
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  direction: rtl;
+}
+
+.form-input::placeholder {
+  color: var(--ink-300, #C0C8D6);
+  font-weight: 500;
+  font-style: italic;
+}
+
+.form-input:hover {
+  box-shadow: 3px 3px 0 0 var(--ink-300, #C0C8D6);
+}
+
+.form-input:focus {
+  border-color: var(--mustard-600, #A06E14);
+  background-color: #FFFFFF;
+  box-shadow:
+    4px 4px 0 0 var(--mustard-500, #C68B1E),
+    0 0 0 4px rgba(198, 139, 30, 0.12);
+  transform: translate(-1px, -1px);
+}
+
+.form-input:disabled {
+  background-color: var(--paper-100, #F6F1E4);
+  color: var(--ink-500, #6A7791);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Textarea */
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.8;
+  padding-bottom: 1.75rem;   /* space for counter */
+}
+
+/* Select */
+.form-select {
+  padding-inline-end: 2.75rem;
+  padding-inline-start: 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23131823' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 0.875rem center;
+  background-size: 16px;
+  cursor: pointer;
+  padding-block: 0.9375rem;
+}
+
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A06E14' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+/* Phone input — LTR digits inside RTL form */
+.form-input[type="tel"] {
+  direction: ltr;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Number inputs (if any) */
+.form-input[type="number"] {
+  direction: ltr;
+  text-align: right;
+}
+
+
+/* ============================================================
+   10. FIELD STATES — error / success
+   ============================================================ */
+
+.form-field.has-error .form-input {
+  border-color: var(--rust-600, #A64B2A);
+  background-color: #FEF7F5;
+  box-shadow: 3px 3px 0 0 var(--rust-500, #C25E3A);
+}
+
+.form-field.has-error .form-input:focus {
+  box-shadow:
+    4px 4px 0 0 var(--rust-600, #A64B2A),
+    0 0 0 4px rgba(194, 94, 58, 0.14);
+  animation: field-shake 420ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes field-shake {
+  0%, 100% { transform: translate(-1px, -1px) translateX(0); }
+  20%      { transform: translate(-1px, -1px) translateX(-5px); }
+  40%      { transform: translate(-1px, -1px) translateX(5px); }
+  60%      { transform: translate(-1px, -1px) translateX(-3px); }
+  80%      { transform: translate(-1px, -1px) translateX(3px); }
+}
+
+.form-field.has-success .form-input {
+  border-color: var(--success-600, #2F7A47);
+  box-shadow: 3px 3px 0 0 var(--success-600, #2F7A47);
+}
+
+.form-field.has-success .form-input:focus {
+  box-shadow:
+    4px 4px 0 0 var(--success-600, #2F7A47),
+    0 0 0 4px rgba(47, 122, 71, 0.12);
+}
+
+/* Success tick icon inside input */
+.form-field.has-success .form-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F7A47' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 0.875rem center;
+  background-size: 16px;
+  padding-inline-start: 2.75rem;
+}
+
+.form-field.has-error .form-input:not(.form-select) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A64B2A' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 0.875rem center;
+  background-size: 16px;
+  padding-inline-start: 2.75rem;
+}
+
+.form-select.form-input {
+  background-position: left 0.875rem center;
+}
+
+
+/* ============================================================
+   11. FORM HINT
+   ============================================================ */
+
+.form-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-500, #6A7791);
+  line-height: 1.6;
+  padding-inline-start: 0.25rem;
+  transition: color 200ms ease;
+}
+
+.form-hint__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--ink-300, #C0C8D6);
+  margin-top: 0.1875rem;
+  transition: color 200ms ease;
+}
+
+.form-hint__text {
+  flex: 1;
+}
+
+.form-field.is-focused .form-hint {
+  color: var(--ink-600, #46546D);
+}
+
+.form-field.is-focused .form-hint__icon {
+  color: var(--mustard-500, #C68B1E);
+}
+
+.form-field.has-error .form-hint {
+  display: none;
+}
+
+
+/* ============================================================
+   12. FORM ERROR
+   ============================================================ */
+
+.form-error {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--rust-600, #A64B2A);
+  line-height: 1.5;
+  padding-inline-start: 0.25rem;
+  min-height: 0;
+  transition: min-height 200ms ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.form-error:not(:empty) {
+  min-height: 1.5em;
+}
+
+.form-error:not(:empty)::before {
+  content: '';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  background-color: var(--rust-500, #C25E3A);
+  color: #FFFFFF;
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='8' x2='12' y2='14'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+  background-size: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+/* ============================================================
+   13. FORM COUNTER
+   ============================================================ */
+
+.form-counter {
+  position: absolute;
+  bottom: -0.2rem;
+  inset-inline-end: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--ink-400, #98A3B8);
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms ease;
+  letter-spacing: 0.02em;
+  z-index: 1;
+  /* top:  50% !important; */
+}
+
+.form-counter__current {
+  font-weight: 900;
+}
+
+.form-counter.is-warning {
+  color: var(--mustard-600, #A06E14);
+}
+
+.form-counter.is-danger {
+  color: var(--rust-600, #A64B2A);
+}
+
+
+/* ============================================================
+   14. FORM ACTIONS
+   ============================================================ */
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 440px) {
+  .form-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .form-actions .form-submit {
+    flex: 1 1 65%;
+    order: 1;
+  }
+
+  .form-actions .form-reset {
+    flex: 1 1 30%;
+    order: 2;
+  }
+}
+
+/* Submit button override */
+.form-submit {
+  font-size: 1rem !important;
+  font-weight: 900 !important;
+  padding: 1.0625rem 1.5rem !important;
+  border-radius: 16px !important;
+  gap: 0.625rem !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #3FA95A 0%, #2C8B47 100%) !important;
+  color: #FFFFFF !important;
+  border: 2px solid #1F5C33 !important;
+  box-shadow:
+    4px 4px 0 0 #1F5C33,
+    0 12px 28px rgba(31, 92, 51, 0.28) !important;
+  text-shadow: 0 1px 1px rgba(15, 60, 30, 0.3);
+  transition:
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 200ms ease !important;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.form-submit:hover {
+  background: linear-gradient(180deg, #47BB65 0%, #33A052 100%) !important;
+  transform: translate(-2px, -3px);
+  box-shadow:
+    6px 7px 0 0 #1F5C33,
+    0 18px 36px rgba(31, 92, 51, 0.36) !important;
+}
+
+.form-submit:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    1px 1px 0 0 #1F5C33,
+    0 6px 14px rgba(31, 92, 51, 0.28) !important;
+}
+
+.form-submit:focus-visible {
+  outline: 3px solid var(--mustard-500, #C68B1E);
+  outline-offset: 3px;
+}
+
+.form-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: -60%;
+  width: 40%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
+  animation: submit-shine 4.5s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes submit-shine {
+  0%, 70%  { inset-inline-start: -60%; }
+  85%      { inset-inline-start: 130%; }
+  100%     { inset-inline-start: 130%; }
+}
+
+.form-submit__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.form-submit__text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reset button */
+.form-reset {
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  padding: 0.9375rem 1rem !important;
+  color: var(--ink-500, #6A7791) !important;
+  border-color: var(--ink-300, #C0C8D6) !important;
+}
+
+.form-reset:hover {
+  color: var(--rust-600, #A64B2A) !important;
+  border-color: var(--rust-500, #C25E3A) !important;
+}
+
+
+/* ============================================================
+   15. FORM LEGAL
+   ============================================================ */
+
+.form-legal {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--ink-400, #98A3B8);
+  line-height: 1.7;
+  text-align: center;
+  margin: 0;
+  padding: 0 0.5rem;
+  letter-spacing: 0.005em;
+}
+
+
+/* ============================================================
+   16. HONEYPOT (must stay invisible)
+   ============================================================ */
+
+.form-honeypot {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+}
+
+
+/* ============================================================
+   17. SUCCESS VIEW
+   ============================================================ */
+
+.form-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.25rem 1.75rem;
+  text-align: center;
+  position: relative;
+}
+
+@media (min-width: 520px) {
+  .form-success {
+    padding: 2.5rem 1.75rem 2rem;
+    gap: 1.25rem;
+  }
+}
+
+/* Icon with ripple effect */
+.form-success__icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  background: linear-gradient(135deg,
+    #3FA95A 0%,
+    #2C8B47 100%);
+  color: #FFFFFF;
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 50% 50% 50% 6px;
+  box-shadow:
+    5px 5px 0 0 var(--ink-900, #131823),
+    0 14px 32px rgba(47, 122, 71, 0.28);
+  transform: rotate(-4deg);
+  animation: success-icon-in 720ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-bottom: 0.5rem;
+}
+
+.form-success__icon::before,
+.form-success__icon::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50% 50% 50% 6px;
+  border: 2px solid var(--success-600, #2F7A47);
+  opacity: 0;
+  animation: success-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.form-success__icon::after {
+  animation-delay: 1.2s;
+}
+
+@keyframes success-icon-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-15deg) scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: rotate(2deg) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-4deg) scale(1);
+  }
+}
+
+@keyframes success-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.form-success__title {
+  font-size: 1.375rem;
+  font-weight: 900;
+  color: var(--ink-900, #131823);
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+  margin: 0;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.form-success__title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) skewX(-6deg) rotate(-0.6deg);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg,
+    var(--mustard-400, #DDA83D),
+    var(--mustard-600, #A06E14));
+  border-radius: 3px;
+}
+
+.form-success__desc {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink-600, #46546D);
+  line-height: 1.85;
+  margin: 0;
+  max-width: 40ch;
+}
+
+/* Preview label */
+.form-success__preview-label {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mustard-700, #7A5310);
+  align-self: stretch;
+  text-align: start;
+  padding: 0 0.25rem;
+  margin-bottom: -0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-success__preview-label::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background-color: var(--mustard-500, #C68B1E);
+  border-radius: 2px;
+}
+
+/* Message preview */
+.form-success__preview {
+  width: 100%;
+  padding: 1rem 1.125rem;
+  margin: 0;
+  background-color: var(--paper-50, #FBF8F0);
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 0 var(--ink-900, #131823);
+  font-family: 'Vazirmatn', 'Tahoma', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.85;
+  color: var(--ink-800, #1E2637);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  text-align: start;
+  direction: rtl;
+}
+
+.form-success__preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-success__preview::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.form-success__preview::-webkit-scrollbar-thumb {
+  background-color: var(--ink-300, #C0C8D6);
+  border-radius: 999px;
+}
+
+/* Actions */
+.form-success__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.form-success__btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* WhatsApp button override */
+.form-success .btn--whatsapp {
+  background: linear-gradient(180deg, #25D366 0%, #1DA851 100%) !important;
+  color: #FFFFFF !important;
+  border: 2px solid #0D4D26 !important;
+  box-shadow:
+    4px 4px 0 0 #0D4D26,
+    0 12px 28px rgba(29, 168, 81, 0.28) !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 1px rgba(6, 46, 20, 0.3);
+}
+
+.form-success .btn--whatsapp:hover {
+  background: linear-gradient(180deg, #2ADF6E 0%, #1DA851 100%) !important;
+  transform: translate(-2px, -3px);
+  box-shadow:
+    6px 7px 0 0 #0D4D26,
+    0 18px 36px rgba(29, 168, 81, 0.36) !important;
+}
+
+.form-success .btn--whatsapp:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    1px 1px 0 0 #0D4D26,
+    0 6px 14px rgba(29, 168, 81, 0.28) !important;
+}
+
+
+/* ============================================================
+   18. LOADING STATE (submit button)
+   ============================================================ */
+
+.form-submit.is-loading {
+  pointer-events: none;
+  color: transparent !important;
+}
+
+.form-submit.is-loading > * {
+  visibility: hidden;
+}
+
+.form-submit.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border: 2.5px solid #FFFFFF;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: form-spin 0.7s linear infinite;
+  z-index: 3;
+}
+
+@keyframes form-spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ============================================================
+   19. KEYBOARD FOCUS RING
+   ============================================================ */
+
+.form-input:focus-visible,
+.form-submit:focus-visible,
+.form-reset:focus-visible {
+  outline: 3px solid var(--mustard-500, #C68B1E);
+  outline-offset: 3px;
+}
+
+.form-input:focus-visible {
+  outline: none; /* use box-shadow instead */
+}
+
+
+/* ============================================================
+   20. RESPONSIVE — Tablet (640px+)
+   ============================================================ */
+
+@media (min-width: 640px) {
+
+  .form {
+    padding: 2rem 1.75rem 2.25rem;
+    gap: 1.5rem;
+  }
+
+  .form-fields {
+    gap: 1.25rem;
+  }
+
+  .form-context {
+    padding: 1rem 1.125rem;
+    grid-template-columns: 48px 1fr;
+    gap: 1rem;
+  }
+
+  .form-context__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .form-context__title {
+    font-size: 1rem;
+  }
+
+  .form-label {
+    font-size: 0.875rem;
+  }
+
+  .form-input {
+    font-size: 1rem;
+    padding: 1rem 1.125rem;
+  }
+
+  .form-select {
+    padding-inline-end: 3rem;
+  }
+
+  .form-success__title {
+    font-size: 1.5rem;
+  }
+
+  .form-success__desc {
+    font-size: 1rem;
+  }
+}
+
+
+/* ============================================================
+   21. RESPONSIVE — Desktop (960px+)
+   ============================================================ */
+
+@media (min-width: 960px) {
+
+  .form {
+    padding: 2.25rem 2rem 2.5rem;
+    gap: 1.625rem;
+  }
+
+  .form-progress {
+    padding: 1rem 1.125rem;
+  }
+
+  .form-progress__title {
+    font-size: 0.8125rem;
+  }
+
+  .form-progress__current {
+    font-size: 1rem;
+  }
+
+  .form-success {
+    padding: 3rem 2rem 2.5rem;
+  }
+
+  .form-success__preview {
+    max-height: 240px;
+  }
+}
+
+
+/* ============================================================
+   22. RESPONSIVE — Small mobile (max 380px)
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .form {
+    padding: 1.25rem 1rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .form-fields {
+    gap: 1rem;
+  }
+
+  .form-context {
+    padding: 0.8125rem 0.875rem;
+    grid-template-columns: 38px 1fr;
+    gap: 0.75rem;
+    border-radius: 12px 12px 12px 4px;
+  }
+
+  .form-context__icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .form-context__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .form-context__title {
+    font-size: 0.875rem;
+  }
+
+  .form-context__code {
+    font-size: 0.6875rem;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+  }
+
+  .form-label__required {
+    width: 14px;
+    height: 14px;
+    font-size: 0.6875rem;
+  }
+
+  .form-input {
+    padding: 0.8125rem 0.875rem;
+    font-size: 0.875rem;
+    border-radius: 10px;
+  }
+
+  .form-select {
+    padding-inline-end: 2.5rem;
+    padding-block: 0.875rem;
+  }
+
+  .form-textarea {
+    min-height: 88px;
+  }
+
+  .form-progress {
+    padding: 0.75rem 0.875rem;
+  }
+
+  .form-progress__title {
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+  }
+
+  .form-submit {
+    font-size: 0.9375rem !important;
+    padding: 0.9375rem 1.25rem !important;
+  }
+
+  .form-reset {
+    font-size: 0.8125rem !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  .form-success {
+    padding: 1.5rem 1rem 1.25rem;
+  }
+
+  .form-success__icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .form-success__icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .form-success__title {
+    font-size: 1.25rem;
+  }
+
+  .form-success__desc {
+    font-size: 0.875rem;
+  }
+
+  .form-success__preview {
+    padding: 0.875rem 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+
+/* ============================================================
+   23. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .form-input,
+  .form-submit,
+  .form-reset,
+  .form-field,
+  .form-progress__fill,
+  .form-success__icon,
+  .form-success__icon::before,
+  .form-success__icon::after,
+  .form-submit::before,
+  .form-progress__fill::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .form-field.has-error .form-input:focus {
+    animation: none !important;
+  }
+
+  .form-input:focus {
+    transform: none !important;
+  }
+
+  .form-submit:hover,
+  .form-submit:active,
+  .form-success .btn--whatsapp:hover,
+  .form-success .btn--whatsapp:active {
+    transform: none !important;
+  }
+
+  .form-progress__fill::after {
+    display: none;
+  }
+
+  .form-submit::before {
+    display: none;
+  }
+}
+
+
+/* ============================================================
+   24. HIGH CONTRAST MODE
+   ============================================================ */
+
+@media (prefers-contrast: more) {
+
+  .form-input,
+  .form-context,
+  .form-progress,
+  .form-success__preview {
+    border-width: 2.5px;
+  }
+
+  .form-input {
+    box-shadow: 2px 2px 0 0 var(--ink-900, #131823);
+  }
+
+  .form-hint {
+    color: var(--ink-700, #2F3A4F);
+  }
+
+  .form-legal {
+    color: var(--ink-600, #46546D);
+  }
+
+  .form-label__optional {
+    color: var(--ink-500, #6A7791);
+  }
+}
+
+
+/* ============================================================
+   25. PRINT — hide form (it's interactive)
+   ============================================================ */
+
+@media print {
+  .form,
+  .form-success {
+    display: none !important;
+  }
+}
+
+
+/* ============================================================
+   26. SCROLLBAR for preview area
+   ============================================================ */
+
+.form-success__preview {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-300, #C0C8D6) transparent;
+}
+
+
+/* ============================================================
+   27. RTL FIXES
+   ============================================================ */
+
+[dir="rtl"] .form-input,
+[dir="rtl"] .form-select,
+[dir="rtl"] .form-textarea {
+  text-align: right;
+}
+
+[dir="rtl"] .form-input[type="tel"],
+[dir="rtl"] .form-input[type="email"],
+[dir="rtl"] .form-input[type="number"] {
+  direction: ltr;
+  text-align: right;
+}
+
+[dir="rtl"] .form-hint {
+  flex-direction: row;
+}
+
+[dir="rtl"] .form-error {
+  flex-direction: row;
+}
+
+
+/* ============================================================
+   28. FOCUS VISIBLE FALLBACK
+   ============================================================ */
+
+.form-input:focus-visible {
+  outline: 3px solid var(--mustard-500, #C68B1E);
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   29. DARK MODE PREP (commented — enable when ready)
+   ============================================================ */
+
+/*
+@media (prefers-color-scheme: dark) {
+  .form-input {
+    background-color: #1E2637;
+    color: #FBF8F0;
+    border-color: #F6F1E4;
+  }
+  .form-context {
+    background-color: #1E2637;
+    border-color: #F6F1E4;
+  }
+  ...
+}
+*/
+
+
+/* ============================================================
+   30. END OF FORM.CSS
+   ============================================================ */

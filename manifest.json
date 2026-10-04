@@ -1,0 +1,29 @@
+{
+    "name": "Miss-Math",
+    "short_name": "Miss-Math",
+    "start_url": "http://127.0.0.1:5500/index.html",
+    "display": "standalone",
+    "description": "Miss Math For Learn Math",
+    "orietation": "portrait",
+    "background_color": "#b5975f",
+    "theme_color": "#dda83dc9",
+    "scope": "http://127.0.0.1:5500/index.html",
+    "icons": [
+        {
+            "src": "http://127.0.0.1:5500/assets/img/testimonials/icon1.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "http://127.0.0.1:5500/assets/img/testimonials/icon2.png",
+            "sizes": "48X48",
+            "type": "image/png"
+        },
+        {
+            "src": "http://127.0.0.1:5500/assets/img/testimonials/icon3.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        }
+    ],
+    "splash_pages": null
+}

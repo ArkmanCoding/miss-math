@@ -1,0 +1,1321 @@
+/* ============================================================
+   modal-prize.css
+   Miss Math — Prize / Golden Ticket Modal
+   فاز ۳ — افزودنی
+
+   ─── DESIGN LANGUAGE ──────────────────────────────────────
+   "Golden Ticket × Vintage Voucher"
+   • Bouncy modal entrance w/ rotation
+   • Ticket with ribbon, stub, perforation
+   • Typewriter heading (JS-driven) + blinking caret
+   • Shine sweep across the ticket
+   • Staggered benefit fade-in
+   • All animations respect prefers-reduced-motion
+   ============================================================ */
+
+
+/* ============================================================
+   1. LOCAL TOKENS
+   ============================================================ */
+
+:root {
+  /* Golden ticket palette */
+  --prize-gold-1: #F5D08A;   /* lightest */
+  --prize-gold-2: #EDC77A;
+  --prize-gold-3: #DDA83D;
+  --prize-gold-4: #C68B1E;   /* deep ochre */
+  --prize-gold-5: #7A5310;   /* darkest */
+
+  /* Ribbon */
+  --prize-ribbon-1: #C25E3A;
+  --prize-ribbon-2: #A64B2A;
+  --prize-ribbon-3: #7A3520;
+
+  /* Paper */
+  --prize-paper:   #FBF8F0;
+  --prize-paper-2: #F6F1E4;
+
+  /* Ink */
+  --prize-ink:     #131823;
+  --prize-ink-2:   #1E2637;
+
+  /* Motion */
+  --prize-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --prize-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --prize-ease-spring: cubic-bezier(0.22, 1.4, 0.36, 1);
+  --prize-ease-stamp:  cubic-bezier(0.5, 1.8, 0.4, 1);
+
+  /* Typewriter */
+  --prize-type-speed: 70ms;
+
+  /* Dimensions */
+  --prize-stub-w:     116px;
+  --prize-notif-w:    8px;
+}
+
+
+/* ============================================================
+   2. MODAL SHELL — prize variant
+   ============================================================ */
+
+.modal--prize {
+  padding: 1rem;
+}
+
+.modal--prize .modal__dialog {
+  max-width: 520px;
+  border: 2px solid var(--prize-ink);
+  border-radius: 26px 26px 26px 6px;
+  background-color: var(--prize-paper);
+  box-shadow:
+    8px 8px 0 0 var(--prize-ink),
+    0 32px 72px rgba(19, 24, 35, 0.28);
+  animation: prize-dialog-in 780ms var(--prize-ease-spring);
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+  overflow: visible;
+}
+
+@keyframes prize-dialog-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.55) rotate(-8deg) translateY(48px);
+    filter: blur(10px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  72% {
+    transform: scale(1.045) rotate(1.5deg) translateY(-8px);
+  }
+  86% {
+    transform: scale(0.985) rotate(-0.5deg) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg) translateY(0);
+    filter: blur(0);
+  }
+}
+
+
+/* ============================================================
+   3. MODAL HEADER — prize variant
+   ============================================================ */
+
+.modal__header--prize {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  background: linear-gradient(
+    180deg,
+    var(--prize-gold-1) 0%,
+    var(--prize-gold-2) 100%
+  );
+  border-bottom: 2px solid var(--prize-ink);
+  border-radius: 24px 24px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Diagonal paper stripes for texture */
+.modal__header--prize::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0,
+    transparent 14px,
+    rgba(122, 83, 16, 0.06) 14px,
+    rgba(122, 83, 16, 0.06) 16px
+  );
+  pointer-events: none;
+}
+
+.modal__header--prize .modal__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--prize-ink);
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.modal__title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  transform: rotate(-8deg);
+  animation: gift-wiggle 3.2s var(--prize-ease-out) infinite;
+  filter: drop-shadow(0 1px 0 rgba(122, 83, 16, 0.25));
+}
+
+@keyframes gift-wiggle {
+  0%, 68%, 100% { transform: rotate(-8deg) scale(1); }
+  74%           { transform: rotate(6deg) scale(1.12); }
+  82%           { transform: rotate(-4deg) scale(1.06); }
+  90%           { transform: rotate(2deg) scale(1.02); }
+}
+
+.modal--prize .modal__close {
+  background-color: var(--prize-paper);
+  border: 2px solid var(--prize-ink);
+  color: var(--prize-ink);
+  box-shadow: 2px 2px 0 0 var(--prize-ink);
+  position: relative;
+  z-index: 1;
+}
+
+.modal--prize .modal__close:hover {
+  transform: translate(-1px, -1px) rotate(-10deg);
+  box-shadow: 3px 3px 0 0 var(--prize-ink);
+}
+
+.modal--prize .modal__close:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 var(--prize-ink);
+}
+
+
+/* ============================================================
+   4. MODAL BODY — prize variant
+   ============================================================ */
+
+.modal__body--prize {
+  padding: 1.75rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.375rem;
+  background-color: var(--prize-paper);
+}
+
+@media (min-width: 520px) {
+  .modal__body--prize {
+    padding: 2rem 1.5rem 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+
+/* ============================================================
+   5. PRIZE TICKET — the golden ticket
+   ============================================================ */
+
+/* ============================================================
+   5. PRIZE TICKET — the golden ticket (v2, fixed height)
+   ============================================================ */
+
+.prize-ticket {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-height: 240px;
+
+  background: linear-gradient(
+    135deg,
+    var(--prize-paper) 0%,
+    var(--prize-paper-2) 100%
+  );
+  border: 2px solid var(--prize-ink);
+  border-radius: 18px 18px 18px 4px;
+  box-shadow:
+    5px 5px 0 0 var(--prize-ink),
+    0 18px 40px rgba(19, 24, 35, 0.14);
+  overflow: hidden;
+  isolation: isolate;
+  transform: rotate(-0.5deg);
+  transition: transform 400ms var(--prize-ease-bounce);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prize-ticket:hover {
+  transform: rotate(0deg) scale(1.005);
+}
+
+/* Subtle grain */
+.prize-ticket::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(19, 24, 35, 0.045) 1px,
+    transparent 1.2px
+  );
+  background-size: 14px 14px;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Shine sweep */
+.prize-ticket::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.75) 48%,
+    rgba(255, 255, 255, 0.4) 52%,
+    transparent 70%
+  );
+  transform: translateX(-140%) skewX(-8deg);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: overlay;
+  animation: ticket-shine 5.5s var(--prize-ease-out) infinite;
+  animation-delay: 1.2s;
+}
+
+@keyframes ticket-shine {
+  0%, 62%  { transform: translateX(-140%) skewX(-8deg); }
+  88%      { transform: translateX(140%) skewX(-8deg); }
+  100%     { transform: translateX(140%) skewX(-8deg); }
+}
+
+
+/* ============================================================
+   RIBBON — corner tag
+   ============================================================ */
+
+.prize-ticket__ribbon {
+  position: absolute;
+  top: 14px;
+  inset-inline-start: -46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 172px;
+  padding: 0.4375rem 0;
+  background: linear-gradient(
+    135deg,
+    var(--prize-ribbon-1) 0%,
+    var(--prize-ribbon-2) 100%
+  );
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(58, 20, 8, 0.35);
+  border-top: 1.5px solid var(--prize-ribbon-3);
+  border-bottom: 1.5px solid var(--prize-ribbon-3);
+  transform: rotate(-45deg);
+  transform-origin: center;
+  box-shadow: 0 4px 12px rgba(58, 20, 8, 0.22);
+  z-index: 4;
+  animation: ribbon-drop 620ms var(--prize-ease-stamp) 380ms both;
+  pointer-events: none;
+}
+
+.prize-ticket__ribbon::before,
+.prize-ticket__ribbon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.prize-ticket__ribbon::before {
+  inset-inline-start: -6px;
+  border-width: 14px 6px 14px 0;
+  border-color: transparent var(--prize-ribbon-3) transparent transparent;
+  filter: brightness(0.85);
+}
+
+.prize-ticket__ribbon::after {
+  inset-inline-end: -6px;
+  border-width: 14px 0 14px 6px;
+  border-color: transparent transparent transparent var(--prize-ribbon-3);
+  filter: brightness(0.85);
+}
+
+.prize-ticket__ribbon span {
+  position: relative;
+  z-index: 1;
+  transform: translateY(-1px);
+}
+
+@keyframes ribbon-drop {
+  0% {
+    opacity: 0;
+    transform: rotate(-45deg) translateY(-28px) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: rotate(-45deg) translateY(3px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-45deg) translateY(0) scale(1);
+  }
+}
+
+
+/* ============================================================
+   MAIN SECTION — offer content (v2, reserved space)
+   ============================================================ */
+
+.prize-ticket__main {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;                    /* CRITICAL: allows text to wrap */
+  min-height: 240px;
+  padding: 2.25rem 1.5rem 1.75rem; /* more top pad for ribbon clearance */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.prize-ticket__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--prize-gold-5);
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.prize-ticket__eyebrow::before {
+  content: '';
+  width: 18px;
+  height: 2px;
+  background-color: var(--prize-gold-4);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ─── Title — reserved 2 lines of space for typing ─── */
+.prize-ticket__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 0.15em;
+  font-size: clamp(1.375rem, 4.8vw, 1.875rem);
+  font-weight: 900;
+  line-height: 1.28;
+  letter-spacing: -0.035em;
+  color: var(--prize-ink);
+  margin: 0;
+  padding: 0;
+
+  /* Reserve space for 2 lines so ticket doesn't jump while typing */
+  min-height: calc(1.28em * 2);
+
+  /* Prevent any inherited overflow */
+  overflow: visible;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.prize-ticket__title:focus-visible {
+  outline: 3px solid var(--prize-gold-4);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.prize-ticket__desc {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--ink-600, #46546D);
+  font-weight: 500;
+  margin-top: 0.375rem;
+  max-width: 38ch;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ============================================================
+   TYPEWRITER
+   ============================================================ */
+
+.typewriter {
+  display: inline;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  background: linear-gradient(
+    180deg,
+    var(--prize-gold-4) 0%,
+    var(--prize-gold-5) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--prize-gold-4);
+  position: relative;
+  min-height: 1em;
+  /* Prevent collapsed height when text is empty during typing */
+  display: inline-block;
+  min-width: 2px;
+}
+
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .typewriter {
+    color: var(--prize-gold-5);
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+.typewriter__caret {
+  display: inline-block;
+  width: 3px;
+  height: 1.05em;
+  margin-inline-start: 3px;
+  background-color: var(--prize-ribbon-1);
+  vertical-align: -0.16em;
+  border-radius: 1px;
+  box-shadow:
+    0 0 6px rgba(194, 94, 58, 0.55),
+    0 0 14px rgba(194, 94, 58, 0.35);
+  animation: caret-blink 900ms steps(2, jump-none) infinite;
+  transform: translateY(-1px);
+  transition: opacity 200ms ease;
+}
+
+.typewriter__caret.is-hidden {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes caret-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+
+/* ============================================================
+   STUB — the tear-off coupon
+   ============================================================ */
+
+.prize-ticket__stub {
+  position: relative;
+  flex: 0 0 var(--prize-stub-w);
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 1.5rem 0.75rem;
+  background: linear-gradient(
+    135deg,
+    var(--prize-gold-2) 0%,
+    var(--prize-gold-4) 100%
+  );
+  color: var(--prize-ink);
+  text-align: center;
+  overflow: hidden;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.prize-ticket__stub::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 8px,
+    rgba(255, 255, 255, 0.16) 8px,
+    rgba(255, 255, 255, 0.16) 9px
+  );
+  pointer-events: none;
+}
+
+.prize-ticket__stub-label {
+  position: relative;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--prize-ink);
+  opacity: 0.78;
+  z-index: 1;
+  line-height: 1;
+}
+
+.prize-ticket__stub-value {
+  position: relative;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(1.75rem, 6.5vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--prize-ink);
+  letter-spacing: -0.05em;
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 255, 0.4),
+    2px 2px 0 rgba(122, 83, 16, 0.22);
+  transform: rotate(-3deg);
+  z-index: 1;
+}
+
+
+/* ============================================================
+   PERFORATION — torn edge between main and stub
+   ============================================================ */
+
+.prize-ticket__perforation {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  inset-inline-end: var(--prize-stub-w);
+  width: 2px;
+  background-image: repeating-linear-gradient(
+    180deg,
+    var(--prize-ink) 0,
+    var(--prize-ink) 5px,
+    transparent 5px,
+    transparent 11px
+  );
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.prize-ticket__perforation::before,
+.prize-ticket__perforation::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--prize-paper);
+  border: 2px solid var(--prize-ink);
+  transform: translateX(50%);
+  box-shadow: inset 2px 2px 3px rgba(19, 24, 35, 0.15);
+  z-index: 5;
+}
+
+.prize-ticket__perforation::before {
+  top: -24px;
+}
+
+.prize-ticket__perforation::after {
+  bottom: -24px;
+}
+
+
+/* ============================================================
+   RESPONSIVE — smaller widths
+   ============================================================ */
+
+/* ─── Tablet / large mobile ─── */
+@media (max-width: 520px) {
+  :root {
+    --prize-stub-w: 104px;
+  }
+
+  .prize-ticket {
+    min-height: 220px;
+  }
+
+  .prize-ticket__main {
+    padding: 2rem 1.25rem 1.5rem;
+    min-height: 220px;
+    gap: 0.625rem;
+  }
+
+  .prize-ticket__stub {
+    min-height: 220px;
+    padding: 1.25rem 0.625rem;
+  }
+
+  .prize-ticket__ribbon {
+    width: 158px;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    top: 12px;
+    inset-inline-start: -44px;
+  }
+
+  .prize-ticket__title {
+    font-size: clamp(1.25rem, 5vw, 1.625rem);
+  }
+
+  .prize-ticket__desc {
+    font-size: 0.8125rem;
+    max-width: 100%;
+  }
+}
+
+/* ─── Small mobile — stack vertically ─── */
+@media (max-width: 380px) {
+  :root {
+    --prize-stub-w: 88px;
+  }
+
+  .prize-ticket {
+    min-height: 200px;
+  }
+
+  .prize-ticket__main {
+    padding: 1.875rem 1.125rem 1.375rem;
+    min-height: 200px;
+  }
+
+  .prize-ticket__stub {
+    min-height: 200px;
+    padding: 1rem 0.5rem;
+  }
+
+  .prize-ticket__ribbon {
+    width: 142px;
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    inset-inline-start: -40px;
+  }
+
+  .prize-ticket__stub-value {
+    font-size: 1.5rem;
+  }
+
+  .prize-ticket__stub-label {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+  }
+}
+
+/* ─── Very narrow — hide stub, show full width ─── */
+@media (max-width: 320px) {
+  .prize-ticket__stub {
+    display: none;
+  }
+
+  .prize-ticket__perforation {
+    display: none;
+  }
+
+  .prize-ticket__main {
+    padding: 2rem 1.125rem 1.5rem;
+  }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .prize-ticket::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .prize-ticket {
+    transform: none;
+    transition: none;
+  }
+
+  .prize-ticket__ribbon {
+    animation: none;
+    opacity: 1;
+    transform: rotate(-45deg);
+  }
+
+  .typewriter__caret {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   6. RIBBON — corner tag
+   ============================================================ */
+
+.prize-ticket__ribbon {
+  position: absolute;
+  top: -3px;
+  inset-inline-start: -46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 172px;
+  padding: 0.4375rem 0;
+  background: linear-gradient(
+    135deg,
+    var(--prize-ribbon-1) 0%,
+    var(--prize-ribbon-2) 100%
+  );
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(58, 20, 8, 0.35);
+  border-top: 1.5px solid var(--prize-ribbon-3);
+  border-bottom: 1.5px solid var(--prize-ribbon-3);
+  transform: rotate(
+55deg) !important;
+  transform-origin: center;
+  box-shadow: 0 4px 12px rgba(58, 20, 8, 0.22);
+  z-index: 4;
+  animation: ribbon-drop 620ms var(--prize-ease-stamp) 380ms both;
+}
+
+/* Notched ribbon ends */
+.prize-ticket__ribbon::before,
+.prize-ticket__ribbon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.prize-ticket__ribbon::before {
+  inset-inline-start: -6px;
+  border-width: 14px 6px 14px 0;
+  border-color: transparent var(--prize-ribbon-3) transparent transparent;
+  filter: brightness(0.85);
+}
+
+.prize-ticket__ribbon::after {
+  inset-inline-end: -6px;
+  border-width: 14px 0 14px 6px;
+  border-color: transparent transparent transparent var(--prize-ribbon-3);
+  filter: brightness(0.85);
+}
+
+.prize-ticket__ribbon span {
+  position: relative;
+  z-index: 1;
+  transform: translateY(-1px);
+}
+
+@keyframes ribbon-drop {
+  0% {
+    opacity: 0;
+    transform: rotate(-45deg) translateY(-28px) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: rotate(-45deg) translateY(3px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-45deg) translateY(0) scale(1);
+  }
+}
+
+
+/* ============================================================
+   7. MAIN SECTION — the offer
+   ============================================================ */
+
+.prize-ticket__main {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1.75rem 1.375rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 2;
+  min-width: 0;
+}
+
+.prize-ticket__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--prize-gold-5);
+  margin-bottom: 0.25rem;
+}
+
+.prize-ticket__eyebrow::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background-color: var(--prize-gold-4);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.prize-ticket__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: clamp(1.375rem, 5vw, 1.875rem);
+  font-weight: 900;
+  line-height: 1.22;
+  letter-spacing: -0.035em;
+  color: var(--prize-ink);
+  margin: 0;
+  position: relative;
+  min-height: 1.4em;
+  word-break: break-word;
+}
+
+.prize-ticket__desc {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--ink-600, #46546D);
+  font-weight: 500;
+  margin-top: 0.375rem;
+  max-width: 34ch;
+}
+
+
+/* ============================================================
+   8. TYPEWRITER
+   ============================================================ */
+
+.typewriter {
+  display: inline;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: linear-gradient(
+    180deg,
+    var(--prize-gold-4) 0%,
+    var(--prize-gold-5) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--prize-gold-4);
+  position: relative;
+}
+
+/* Fallback for browsers that don't support background-clip: text */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .typewriter {
+    color: var(--prize-gold-5);
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+.typewriter__caret {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-inline-start: 3px;
+  background-color: var(--prize-ribbon-1);
+  vertical-align: -0.12em;
+  border-radius: 1px;
+  box-shadow:
+    0 0 6px rgba(194, 94, 58, 0.55),
+    0 0 14px rgba(194, 94, 58, 0.35);
+  animation: caret-blink 900ms steps(2, jump-none) infinite;
+  transform: translateY(-1px);
+}
+
+.typewriter__caret.is-hidden {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes caret-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+
+/* ============================================================
+   9. STUB — the tear-off coupon
+   ============================================================ */
+
+.prize-ticket__stub {
+  position: relative;
+  flex: 0 0 var(--prize-stub-w);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 1.5rem 0.75rem;
+  background: linear-gradient(
+    135deg,
+    var(--prize-gold-2) 0%,
+    var(--prize-gold-4) 100%
+  );
+  color: var(--prize-ink);
+  text-align: center;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Diagonal shine on stub */
+.prize-ticket__stub::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 8px,
+    rgba(255, 255, 255, 0.16) 8px,
+    rgba(255, 255, 255, 0.16) 9px
+  );
+  pointer-events: none;
+}
+
+.prize-ticket__stub-label {
+  position: relative;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--prize-ink);
+  opacity: 0.78;
+  z-index: 1;
+}
+
+.prize-ticket__stub-value {
+  position: relative;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--prize-ink);
+  letter-spacing: -0.05em;
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 255, 0.4),
+    2px 2px 0 rgba(122, 83, 16, 0.22);
+  transform: rotate(-3deg);
+  z-index: 1;
+}
+
+
+/* ============================================================
+   10. PERFORATION — torn edge between main and stub
+   ============================================================ */
+
+.prize-ticket__perforation {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  inset-inline-end: var(--prize-stub-w);
+  width: 2px;
+  background-image: repeating-linear-gradient(
+    180deg,
+    var(--prize-ink) 0,
+    var(--prize-ink) 5px,
+    transparent 5px,
+    transparent 11px
+  );
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Top punch hole */
+.prize-ticket__perforation::before,
+.prize-ticket__perforation::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 50%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--prize-paper);
+  border: 2px solid var(--prize-ink);
+  transform: translateX(50%);
+  box-shadow: inset 2px 2px 3px rgba(19, 24, 35, 0.15);
+}
+
+.prize-ticket__perforation::before {
+  top: -22px;
+}
+
+.prize-ticket__perforation::after {
+  bottom: -22px;
+}
+
+
+/* ============================================================
+   11. BENEFITS LIST
+   ============================================================ */
+
+.prize-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.prize-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--prize-ink-2);
+  line-height: 1.5;
+  padding: 0.5rem 0.75rem;
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--prize-ink);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 0 var(--prize-ink);
+  opacity: 0;
+  transform: translateX(-14px);
+  animation: benefit-slide 540ms var(--prize-ease-spring) forwards;
+}
+
+.prize-benefits li:nth-child(1) { animation-delay: 720ms; }
+.prize-benefits li:nth-child(2) { animation-delay: 820ms; }
+.prize-benefits li:nth-child(3) { animation-delay: 920ms; }
+
+@keyframes benefit-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.prize-benefits__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  background-color: #DCEEDF;
+  color: #2F7A47;
+  border: 1.5px solid #2F7A47;
+  border-radius: 50%;
+  transform: rotate(-4deg);
+}
+
+
+/* ============================================================
+   12. ACTIONS
+   ============================================================ */
+
+.prize-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 0.25rem;
+  opacity: 0;
+  animation: prize-actions-in 620ms var(--prize-ease-out) 1020ms forwards;
+}
+
+@keyframes prize-actions-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.prize-actions .btn--primary {
+  background: linear-gradient(
+    180deg,
+    var(--prize-gold-3) 0%,
+    var(--prize-gold-4) 100%
+  );
+  border-color: var(--prize-ink);
+  color: var(--prize-ink);
+  box-shadow:
+    4px 4px 0 0 var(--prize-ink),
+    0 10px 24px rgba(198, 139, 30, 0.32);
+  font-weight: 900;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.prize-actions .btn--primary:hover {
+  background: linear-gradient(
+    180deg,
+    var(--prize-gold-2) 0%,
+    var(--prize-gold-3) 100%
+  );
+  transform: translate(-2px, -3px);
+  box-shadow:
+    6px 7px 0 0 var(--prize-ink),
+    0 16px 32px rgba(198, 139, 30, 0.38);
+}
+
+.prize-actions .btn--primary:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    1px 1px 0 0 var(--prize-ink),
+    0 6px 14px rgba(198, 139, 30, 0.28);
+}
+
+.prize-actions .btn--ghost {
+  border-color: rgba(19, 24, 35, 0.35);
+  color: var(--ink-500, #6A7791);
+  font-weight: 700;
+}
+
+.prize-actions .btn--ghost:hover {
+  background-color: rgba(19, 24, 35, 0.04);
+  border-color: rgba(19, 24, 35, 0.6);
+  color: var(--prize-ink);
+}
+
+
+/* ============================================================
+   13. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 420px) {
+  :root {
+    --prize-stub-w: 96px;
+  }
+
+  .prize-ticket__ribbon {
+    width: 100px;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    inset-inline-start: -42px;
+  }
+
+  .prize-ticket__main {
+    padding: 1.5rem 1.125rem 1.25rem;
+  }
+
+  .prize-ticket__desc {
+    font-size: 0.8125rem;
+  }
+
+  .prize-benefits li {
+    font-size: 0.8125rem;
+    padding: 0.4375rem 0.625rem;
+  }
+
+  .modal__body--prize {
+    padding: 1.375rem 1rem 1rem;
+    gap: 1.125rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .modal__header--prize {
+    padding: 1rem 1.375rem;
+  }
+
+  .modal__header--prize .modal__title {
+    font-size: 1rem;
+  }
+}
+
+
+/* ============================================================
+   14. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal--prize .modal__dialog {
+    animation: none;
+  }
+
+  .prize-ticket__ribbon {
+    animation: none;
+    opacity: 1;
+    transform: rotate(-45deg);
+  }
+
+  .prize-ticket::after {
+    display: none;
+  }
+
+  .modal__title-icon {
+    animation: none;
+  }
+
+  .prize-benefits li {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .prize-actions {
+    opacity: 1;
+    animation: none;
+  }
+
+  .typewriter__caret {
+    animation: none;
+  }
+
+  .prize-ticket {
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* ============================================================
+   15. HIGH CONTRAST MODE
+   ============================================================ */
+
+@media (prefers-contrast: more) {
+  .prize-ticket,
+  .prize-benefits li,
+  .modal--prize .modal__dialog {
+    border-width: 2.5px;
+  }
+
+  .prize-ticket__perforation {
+    opacity: 0.75;
+  }
+
+  .prize-ticket__stub-label {
+    opacity: 1;
+  }
+}
+
+
+/* ============================================================
+   16. PRINT
+   ============================================================ */
+
+@media print {
+  .modal--prize {
+    display: none !important;
+  }
+}

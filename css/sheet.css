@@ -1,0 +1,1175 @@
+/* ============================================================
+   sheet.css
+   Miss Math — Bottom Sheet (All Classes) Styles
+   فاز ۳ — نسخه v3.0.0 (class-based transition)
+
+   ─── CHANGELOG ────────────────────────────────────────────
+   v3.0.0
+     • FIXED: Sheet now opens reliably on first click
+     • Switched from CSS animation to CLASS-BASED TRANSITION
+       (is-open pattern). This works 100% across all browsers
+       because it doesn't depend on display:none → display:flex
+       animation quirks.
+     • Overrides legacy sheet-in animation from components.css
+     • Full opaque solid backgrounds (no more glassy)
+     • All card layout fixes retained from v2.0.0
+
+   ─── ENTRY PATTERN ────────────────────────────────────────
+   Default: panel at translateY(100%), backdrop opacity 0
+   When .sheet.is-open:
+     panel → translateY(0)
+     backdrop → opacity 1
+   Transition handles the animation. No CSS keyframes.
+   ============================================================ */
+
+
+/* ============================================================
+   1. LOCAL TOKENS
+   ============================================================ */
+
+:root {
+  --sheet-panel-radius: 28px 28px 0 0;
+  --sheet-panel-radius-sm: 24px 24px 0 0;
+
+  /* Solid paper base — MUST stay opaque */
+  --sheet-bg-solid: #FBF8F0;
+  --sheet-bg-solid-2: #FDFAF4;
+
+  --sheet-card-shadow:
+    4px 4px 0 0 var(--ink-900, #131823),
+    0 8px 20px rgba(58, 42, 20, 0.10),
+    0 3px 8px rgba(58, 42, 20, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(19, 24, 35, 0.03);
+
+  --sheet-card-shadow-hover:
+    6px 6px 0 0 var(--ink-900, #131823),
+    0 14px 32px rgba(58, 42, 20, 0.14),
+    0 5px 12px rgba(58, 42, 20, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -2px 3px rgba(19, 24, 35, 0.03);
+
+  /* Entry/exit transition timings */
+  --sheet-enter-panel-ms:   480ms;
+  --sheet-enter-backdrop-ms: 340ms;
+  --sheet-enter-ease:       cubic-bezier(0.34, 1.46, 0.64, 1);
+  --sheet-backdrop-ease:    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+/* ============================================================
+   2. SHEET SHELL
+   ============================================================ */
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+/* ─── Backdrop — SOLID opaque overlay ─── */
+.sheet__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(19, 24, 35, 0.72);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  cursor: pointer;
+
+  /* ─── Entry state: hidden ─── */
+  opacity: 0;
+  transition: opacity var(--sheet-enter-backdrop-ms) var(--sheet-backdrop-ease);
+  will-change: opacity;
+}
+
+/* When sheet is open → backdrop visible */
+.sheet.is-open .sheet__backdrop {
+  opacity: 1;
+}
+
+/* ─── Panel — FULLY OPAQUE, slides from bottom ─── */
+.sheet__panel {
+  position: relative;
+  width: 100%;
+  max-height: 92vh;
+  max-height: 92dvh;
+
+  /* ─── SOLID BACKGROUND (never transparent) ─── */
+  background-color: var(--sheet-bg-solid) !important;
+  background-image:
+    radial-gradient(circle at 15% 8%, rgba(237, 199, 122, 0.14) 0%, transparent 42%),
+    radial-gradient(circle at 85% 92%, rgba(199, 222, 224, 0.10) 0%, transparent 42%),
+    linear-gradient(180deg,
+      rgba(253, 250, 244, 0.98) 0%,
+      rgba(251, 248, 240, 0.98) 100%);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-start-start-radius: var(--sheet-panel-radius);
+  border-start-end-radius: var(--sheet-panel-radius);
+  border: 2px solid var(--ink-900, #131823);
+  border-bottom: none;
+  box-shadow:
+    0 -24px 72px rgba(19, 24, 35, 0.32),
+    0 -8px 24px rgba(19, 24, 35, 0.18),
+    0 -2px 6px rgba(19, 24, 35, 0.10),
+    inset 0 2px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -2px 4px rgba(19, 24, 35, 0.06);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  /* ─── OVERRIDE legacy animation from components.css ─── */
+  animation: none !important;
+
+  /* ─── Entry state: slid down + invisible ─── */
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform var(--sheet-enter-panel-ms) var(--sheet-enter-ease),
+    opacity var(--sheet-enter-panel-ms) var(--sheet-enter-ease);
+  will-change: transform, opacity;
+}
+
+/* When sheet is open → panel visible at final position */
+.sheet.is-open .sheet__panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ─── Forced solid underlay (defense in depth) ─── */
+.sheet__panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--sheet-bg-solid);
+  z-index: -1;
+  border-start-start-radius: var(--sheet-panel-radius);
+  border-start-end-radius: var(--sheet-panel-radius);
+  pointer-events: none;
+}
+
+/* ─── Drag handle ─── */
+.sheet__handle {
+  display: block;
+  width: 56px;
+  height: 5px;
+  background:
+    linear-gradient(180deg,
+      var(--ink-300, #C0C8D6) 0%,
+      var(--ink-400, #98A3B8) 100%);
+  border-radius: 999px;
+  margin: 0.875rem auto 0.5rem;
+  flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(19, 24, 35, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ============================================================
+   3. SHEET HEADER
+   ============================================================ */
+
+.sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.875rem;
+  padding: 0.625rem 1.25rem 0.875rem;
+  border-bottom: 2px solid var(--ink-900, #131823);
+  flex-shrink: 0;
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      rgba(250, 239, 211, 0.35) 0%,
+      transparent 100%);
+  z-index: 2;
+}
+
+.sheet__header::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+.sheet__title {
+  font-size: 1.125rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--ink-900, #131823);
+  position: relative;
+  padding-inline-start: 0.875rem;
+  line-height: 1.35;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.sheet__title::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  transform: translateY(-50%) skewX(-8deg) rotate(-0.6deg);
+  width: 6px;
+  height: 22px;
+  background:
+    linear-gradient(180deg,
+      var(--mustard-400, #DDA83D) 0%,
+      var(--mustard-600, #A06E14) 100%);
+  border-radius: 3px;
+  box-shadow:
+    1.5px 1.5px 0 0 var(--ink-900, #131823);
+}
+
+.sheet__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background:
+    linear-gradient(180deg,
+      #FFFFFF 0%,
+      #FDFAF4 100%);
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 14px;
+  color: var(--ink-900, #131823);
+  cursor: pointer;
+  box-shadow:
+    3px 3px 0 0 var(--ink-900, #131823),
+    0 4px 10px rgba(58, 42, 20, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transition:
+    transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 200ms ease;
+  flex-shrink: 0;
+}
+
+.sheet__close:hover {
+  background:
+    linear-gradient(180deg,
+      #FEF7E8 0%,
+      #FDF0D6 100%);
+  transform: translate(-1px, -1px) rotate(-8deg);
+  box-shadow:
+    4px 4px 0 0 var(--ink-900, #131823),
+    0 6px 14px rgba(58, 42, 20, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.sheet__close:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    1px 1px 0 0 var(--ink-900, #131823),
+    inset 0 2px 4px rgba(19, 24, 35, 0.10);
+}
+
+.sheet__close:focus-visible {
+  outline: 3px solid var(--mustard-500, #C68B1E);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   4. HINT TEXT
+   ============================================================ */
+
+.sheet__hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-500, #6A7791);
+  flex-shrink: 0;
+  letter-spacing: -0.005em;
+  line-height: 1.5;
+  position: relative;
+  z-index: 2;
+}
+
+.sheet__hint::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background:
+    linear-gradient(135deg,
+      var(--mustard-400, #DDA83D) 0%,
+      var(--mustard-600, #A06E14) 100%);
+  flex-shrink: 0;
+  box-shadow:
+    1px 1px 0 0 var(--ink-900, #131823),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  animation: hint-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.15); opacity: 0.85; }
+}
+
+
+/* ============================================================
+   5. SHEET BODY — scroll area
+   ============================================================ */
+
+.sheet__body {
+  padding: 1rem 1.25rem 1.75rem;
+  padding-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-height: 0;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-content: start;
+
+  background-color: var(--sheet-bg-solid);
+  position: relative;
+  z-index: 1;
+}
+
+.sheet__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sheet__body::-webkit-scrollbar-track {
+  background-color: rgba(246, 241, 228, 0.6);
+  border-radius: 999px;
+}
+
+.sheet__body::-webkit-scrollbar-thumb {
+  background-color: var(--ink-400, #98A3B8);
+  border-radius: 999px;
+  border: 2.5px solid transparent;
+  background-clip: content-box;
+}
+
+.sheet__body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ink-600, #46546D);
+  background-clip: content-box;
+}
+
+.sheet__body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-400, #98A3B8) rgba(246, 241, 228, 0.4);
+}
+
+
+/* ============================================================
+   6. CLASS CARDS
+   ============================================================ */
+
+.sheet__body .class-card {
+  width: 100%;
+  min-width: 0;
+  min-height: auto;
+  padding: 1.25rem 1.25rem 1.125rem;
+
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+
+  background:
+    linear-gradient(180deg,
+      #FFFFFF 0%,
+      #FDFAF4 100%);
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 18px 18px 18px 6px;
+  box-shadow: var(--sheet-card-shadow);
+
+  overflow: visible;
+  box-sizing: border-box;
+
+  transition:
+    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms ease;
+}
+
+.sheet__body .class-card:nth-child(3n + 1) {
+  transform: rotate(-0.4deg);
+}
+
+.sheet__body .class-card:nth-child(3n + 2) {
+  transform: rotate(0.3deg);
+}
+
+.sheet__body .class-card:nth-child(3n) {
+  transform: rotate(-0.2deg);
+}
+
+.sheet__body .class-card:hover,
+.sheet__body .class-card:focus-visible {
+  transform: translate(-2px, -2px) rotate(0deg);
+  box-shadow: var(--sheet-card-shadow-hover);
+  border-color: var(--ink-900, #131823);
+}
+
+.sheet__body .class-card:active {
+  transform: translate(2px, 2px) rotate(0deg);
+  box-shadow:
+    1px 1px 0 0 var(--ink-900, #131823),
+    0 2px 6px rgba(58, 42, 20, 0.06),
+    inset 0 2px 4px rgba(19, 24, 35, 0.06);
+}
+
+.sheet__body .class-card.is-coming-soon {
+  background:
+    linear-gradient(180deg,
+      #FDFAF4 0%,
+      #F8F4E8 100%);
+  border-style: dashed;
+  border-color: var(--ink-500, #6A7791);
+  box-shadow:
+    3px 3px 0 0 var(--ink-400, #98A3B8),
+    0 6px 14px rgba(58, 42, 20, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  opacity: 0.92;
+}
+
+.sheet__body .class-card.is-coming-soon:hover {
+  transform: translate(-1px, -1px) rotate(0deg);
+  box-shadow:
+    4px 4px 0 0 var(--ink-400, #98A3B8),
+    0 8px 18px rgba(58, 42, 20, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+
+/* ============================================================
+   7. CARD HEAD
+   ============================================================ */
+
+.sheet__body .class-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.sheet__body .class-card__type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  white-space: nowrap;
+
+  background:
+    linear-gradient(135deg,
+      var(--mustard-300, #EDC77A) 0%,
+      var(--mustard-500, #C68B1E) 100%);
+  color: var(--ink-950, #0A0E17);
+  border: 1.5px solid var(--ink-900, #131823);
+  border-radius: 7px 7px 7px 2px;
+  box-shadow:
+    2px 2px 0 0 var(--ink-900, #131823),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: rotate(-2deg);
+}
+
+.sheet__body .class-card__type[data-type="online"] {
+  background:
+    linear-gradient(135deg,
+      var(--petrol-400, #4F9CA1) 0%,
+      var(--petrol-600, #1E5A5E) 100%);
+  color: #FFFFFF;
+  transform: rotate(2deg);
+  text-shadow: 0 1px 1px rgba(15, 45, 45, 0.3);
+}
+
+.sheet__body .class-card__type[data-type="offline"] {
+  background:
+    linear-gradient(135deg,
+      var(--rust-400, #D68364) 0%,
+      var(--rust-600, #A64B2A) 100%);
+  color: #FFFFFF;
+  transform: rotate(-1.5deg);
+  text-shadow: 0 1px 1px rgba(58, 20, 8, 0.3);
+}
+
+.sheet__body .class-card__type[data-type="exam-night"] {
+  background:
+    linear-gradient(135deg,
+      var(--ink-800, #1E2637) 0%,
+      var(--ink-950, #0A0E17) 100%);
+  color: var(--mustard-400, #DDA83D);
+  transform: rotate(2deg);
+}
+
+.sheet__body .class-card__code {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--ink-700, #2F3A4F);
+  letter-spacing: 0.06em;
+  direction: ltr;
+  padding: 0.3125rem 0.5625rem;
+  background:
+    linear-gradient(180deg,
+      var(--paper-50, #FBF8F0) 0%,
+      var(--paper-100, #F6F1E4) 100%);
+  border: 1.5px solid var(--ink-900, #131823);
+  border-radius: 7px;
+  box-shadow:
+    1.5px 1.5px 0 0 var(--ink-900, #131823),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   8. CARD TITLE
+   ============================================================ */
+
+.sheet__body .class-card__title {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  font-size: 1.0625rem;
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: var(--ink-900, #131823);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: break-word;
+  hyphens: none;
+  text-align: start;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ============================================================
+   9. CARD DESCRIPTION
+   ============================================================ */
+
+.sheet__body .class-card__desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--ink-600, #46546D);
+  letter-spacing: -0.005em;
+  margin: 0;
+
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ============================================================
+   10. CARD META
+   ============================================================ */
+
+.sheet__body .class-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.875rem;
+  padding-top: 0.875rem;
+  margin-top: auto;
+  border-top: 1.5px dashed var(--ink-200, #DEE3EB);
+  position: relative;
+  z-index: 2;
+}
+
+.sheet__body .class-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-600, #46546D);
+  line-height: 1.4;
+  white-space: nowrap;
+  letter-spacing: -0.005em;
+}
+
+.sheet__body .class-card__meta-item svg {
+  color: var(--mustard-600, #A06E14);
+  flex-shrink: 0;
+  filter: drop-shadow(0.5px 0.5px 0 rgba(19, 24, 35, 0.15));
+}
+
+
+/* ============================================================
+   11. CARD FOOT
+   ============================================================ */
+
+.sheet__body .class-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.875rem;
+  position: relative;
+  z-index: 2;
+  flex-wrap: wrap;
+}
+
+.sheet__body .class-card__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 900;
+  color: var(--ink-900, #131823);
+  padding: 0.375rem 0.625rem;
+  background:
+    linear-gradient(180deg,
+      var(--paper-50, #FBF8F0) 0%,
+      var(--paper-100, #F6F1E4) 100%);
+  border: 1.5px solid var(--ink-900, #131823);
+  border-radius: 8px;
+  box-shadow:
+    1.5px 1.5px 0 0 var(--ink-900, #131823),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sheet__body .class-card__rating svg {
+  color: var(--mustard-500, #C68B1E);
+  fill: var(--mustard-400, #DDA83D);
+  filter: drop-shadow(0.5px 0.5px 0 var(--ink-900, #131823));
+}
+
+.sheet__body .class-card__rating small {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--ink-500, #6A7791);
+  letter-spacing: 0.02em;
+}
+
+.sheet__body .class-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  font-size: 0.8125rem;
+  font-weight: 900;
+  color: var(--mustard-700, #7A5310);
+  transition:
+    color 200ms ease,
+    gap 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  letter-spacing: -0.005em;
+}
+
+.sheet__body .class-card:hover .class-card__cta {
+  gap: 0.5625rem;
+  color: var(--mustard-500, #C68B1E);
+}
+
+.sheet__body .class-card__cta svg {
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0.5px 0.5px 0 rgba(19, 24, 35, 0.15));
+}
+
+.sheet__body .class-card:hover .class-card__cta svg {
+  transform: translateX(-5px) rotate(-4deg);
+}
+
+
+/* ============================================================
+   12. EMPTY STATE
+   ============================================================ */
+
+.sheet__body .sheet__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--ink-500, #6A7791);
+}
+
+.sheet__body .sheet__empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background:
+    linear-gradient(180deg,
+      var(--paper-100, #F6F1E4) 0%,
+      var(--paper-200, #EDE5D2) 100%);
+  border: 2px solid var(--ink-900, #131823);
+  border-radius: 50% 50% 50% 8px;
+  box-shadow:
+    3px 3px 0 0 var(--ink-900, #131823);
+  color: var(--ink-500, #6A7791);
+  transform: rotate(-4deg);
+}
+
+.sheet__body .sheet__empty-text {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--ink-600, #46546D);
+}
+
+
+/* ============================================================
+   13. SKELETON
+   ============================================================ */
+
+.sheet__body .class-card--skeleton {
+  pointer-events: none;
+  min-height: 260px;
+  background:
+    linear-gradient(
+      100deg,
+      var(--paper-50, #FBF8F0) 0%,
+      var(--paper-100, #F6F1E4) 45%,
+      var(--paper-200, #EDE5D2) 55%,
+      var(--paper-50, #FBF8F0) 100%);
+  background-size: 200% 100%;
+  animation: sheet-skeleton-shimmer 1.8s linear infinite;
+  border-color: var(--ink-300, #C0C8D6);
+  box-shadow:
+    2px 2px 0 0 var(--ink-300, #C0C8D6);
+  transform: none !important;
+}
+
+.sheet__body .class-card--skeleton::before,
+.sheet__body .class-card--skeleton::after {
+  display: none !important;
+}
+
+@keyframes sheet-skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+
+/* ============================================================
+   14. RESPONSIVE — Tablet (640px+)
+   ============================================================ */
+
+@media (min-width: 640px) {
+
+  .sheet {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .sheet__panel {
+    max-width: 720px;
+    max-height: 88vh;
+    border-start-start-radius: 32px;
+    border-start-end-radius: 32px;
+    border-inline-start: 2px solid var(--ink-900, #131823);
+    border-inline-end: 2px solid var(--ink-900, #131823);
+  }
+
+  .sheet__header {
+    padding: 0.75rem 1.5rem 1rem;
+  }
+
+  .sheet__title {
+    font-size: 1.1875rem;
+  }
+
+  .sheet__hint {
+    padding: 0.875rem 1.5rem 0;
+    font-size: 0.8125rem;
+  }
+
+  .sheet__body {
+    padding: 1.25rem 1.5rem 2rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    gap: 1.125rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sheet__body .class-card:nth-child(3n + 1),
+  .sheet__body .class-card:nth-child(3n + 2),
+  .sheet__body .class-card:nth-child(3n) {
+    transform: none;
+  }
+
+  .sheet__body .class-card {
+    padding: 1.375rem 1.375rem 1.25rem;
+    gap: 0.9375rem;
+  }
+
+  .sheet__body .class-card__title {
+    font-size: 1.125rem;
+  }
+}
+
+
+/* ============================================================
+   15. RESPONSIVE — Desktop (1024px+)
+   ============================================================ */
+
+@media (min-width: 1024px) {
+
+  .sheet__panel {
+    max-width: 880px;
+    max-height: 86vh;
+  }
+
+  .sheet__header {
+    padding: 0.875rem 2rem 1.125rem;
+  }
+
+  .sheet__title {
+    font-size: 1.25rem;
+  }
+
+  .sheet__hint {
+    padding: 1rem 2rem 0;
+  }
+
+  .sheet__body {
+    padding: 1.5rem 2rem 2.5rem;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+    gap: 1.25rem;
+  }
+
+  .sheet__body .class-card {
+    padding: 1.5rem 1.5rem 1.375rem;
+  }
+
+  .sheet__body .class-card__title {
+    font-size: 1.1875rem;
+  }
+}
+
+
+/* ============================================================
+   16. RESPONSIVE — Small mobile (max 380px)
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .sheet__panel {
+    border-start-start-radius: var(--sheet-panel-radius-sm);
+    border-start-end-radius: var(--sheet-panel-radius-sm);
+  }
+
+  .sheet__handle {
+    width: 48px;
+    height: 4px;
+    margin: 0.75rem auto 0.375rem;
+  }
+
+  .sheet__header {
+    padding: 0.5rem 1rem 0.75rem;
+    gap: 0.625rem;
+  }
+
+  .sheet__title {
+    font-size: 1rem;
+    padding-inline-start: 0.75rem;
+  }
+
+  .sheet__title::before {
+    width: 5px;
+    height: 18px;
+  }
+
+  .sheet__close {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+
+  .sheet__hint {
+    padding: 0.625rem 1rem 0;
+    font-size: 0.6875rem;
+  }
+
+  .sheet__body {
+    padding: 0.875rem 1rem 1.5rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.875rem;
+  }
+
+  .sheet__body .class-card {
+    padding: 1.125rem 1.125rem 1rem;
+    gap: 0.75rem;
+    border-radius: 16px 16px 16px 5px;
+  }
+
+  .sheet__body .class-card__title {
+    font-size: 1rem;
+    line-height: 1.45;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .sheet__body .class-card__desc {
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .sheet__body .class-card__code {
+    font-size: 0.625rem;
+    padding: 0.25rem 0.4375rem;
+  }
+
+  .sheet__body .class-card__type {
+    font-size: 0.625rem;
+    padding: 0.3125rem 0.625rem;
+  }
+
+  .sheet__body .class-card__meta-item {
+    font-size: 0.6875rem;
+  }
+
+  .sheet__body .class-card__rating {
+    font-size: 0.75rem;
+    padding: 0.3125rem 0.5rem;
+  }
+
+  .sheet__body .class-card__cta {
+    font-size: 0.75rem;
+  }
+}
+
+
+/* ============================================================
+   17. LANDSCAPE PHONE
+   ============================================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .sheet__panel {
+    max-height: 96vh;
+  }
+  .sheet__body {
+    padding-top: 0.75rem;
+  }
+}
+
+
+/* ============================================================
+   18. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .sheet__panel,
+  .sheet__backdrop,
+  .sheet__body .class-card,
+  .sheet__body .class-card__cta,
+  .sheet__body .class-card__cta svg,
+  .sheet__close,
+  .sheet__hint::before {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .sheet__panel {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .sheet__backdrop {
+    opacity: 1 !important;
+  }
+
+  .sheet__body .class-card,
+  .sheet__body .class-card:nth-child(3n + 1),
+  .sheet__body .class-card:nth-child(3n + 2),
+  .sheet__body .class-card:nth-child(3n) {
+    transform: none !important;
+  }
+
+  .sheet__body .class-card:hover,
+  .sheet__body .class-card:active {
+    transform: none !important;
+  }
+
+  .sheet__body .class-card--skeleton {
+    animation: none !important;
+  }
+}
+
+
+/* ============================================================
+   19. HIGH CONTRAST
+   ============================================================ */
+
+@media (prefers-contrast: more) {
+  .sheet__panel,
+  .sheet__body .class-card,
+  .sheet__close,
+  .sheet__body .class-card__type,
+  .sheet__body .class-card__code,
+  .sheet__body .class-card__rating {
+    border-width: 2.5px;
+  }
+
+  .sheet__body .class-card__desc {
+    color: var(--ink-700, #2F3A4F);
+  }
+
+  .sheet__body .class-card__meta-item {
+    color: var(--ink-700, #2F3A4F);
+  }
+
+  .sheet__hint {
+    color: var(--ink-700, #2F3A4F);
+  }
+}
+
+
+/* ============================================================
+   20. PRINT
+   ============================================================ */
+
+@media print {
+  .sheet {
+    display: none !important;
+  }
+}
+
+
+/* ============================================================
+   21. FOCUS VISIBLE
+   ============================================================ */
+
+.sheet__body .class-card:focus-visible,
+.sheet__close:focus-visible {
+  outline: 3px solid var(--mustard-500, #C68B1E);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   22. RTL
+   ============================================================ */
+
+[dir="rtl"] .sheet__title,
+[dir="rtl"] .sheet__hint,
+[dir="rtl"] .sheet__body .class-card__title,
+[dir="rtl"] .sheet__body .class-card__desc {
+  text-align: right;
+}
+
+[dir="rtl"] .sheet__body .class-card__code {
+  direction: ltr;
+}
+
+
+/* ============================================================
+   23. FINAL HARD OVERRIDES — kill any legacy interference
+   ============================================================ */
+
+#sheet-all-classes .sheet__panel {
+  background-color: var(--sheet-bg-solid) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#sheet-all-classes .sheet__body {
+  background-color: var(--sheet-bg-solid) !important;
+}
+
+#sheet-all-classes .sheet__backdrop {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: rgba(19, 24, 35, 0.72) !important;
+}
+
+/* Kill the legacy components.css animation for this sheet only */
+#sheet-all-classes .sheet__panel {
+  animation: none !important;
+}
+
+
+.sheet {
+  display: flex;              /* ← همیشه flex */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: visibility 0s linear 560ms, opacity 340ms ease;
+}
+
+.sheet.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet__panel {
+  transform: translateY(100%);
+  transition: transform 560ms cubic-bezier(0.34, 1.46, 0.64, 1);
+}
+
+.sheet.is-open .sheet__panel {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   24. END OF SHEET.CSS
+   ============================================================ */
