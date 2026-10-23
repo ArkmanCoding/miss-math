@@ -1,13 +1,29 @@
 /* ============================================================
    main.css
    Miss Math — Foundation & Design System
+   Brand: خانم صفری / Miss Safari
    فاز ۲ — فایل ۳ از ۱۰
 
    This is the SOURCE OF TRUTH for design tokens.
    Loaded first, so all subsequent CSS files inherit these.
 
+   ─────────────────────────────────────────────────────────────
+   BRAND IDENTITY (final v2.0):
+     Navy    #0F1419  → متن، هدر، تیتر
+     Amber   #E89B2C  → دکمه CTA، تأکید، شماره
+     Petrol  #2C7873  → رنگ مکمل، کارت‌های کلاس
+     Cream   #FBF8F0  → پس‌زمینه اصلی
+     Paper   #FFFFFF  → کارت‌ها، مودال
+     Muted   #6A7791  → متن ثانویه
+     Success #3E7B52  → پیام موفقیت
+     Danger  #B14A38  → خطا
+
+   Slogan: «ریاضی، کدی که پشت جهان هست.»
+   ─────────────────────────────────────────────────────────────
+
    Contains:
    - Modern CSS Reset
+   - Brand Identity tokens (single source of truth)
    - Design Tokens (colors, type, spacing, radius, shadow, motion)
    - Base Typography (fluid with clamp)
    - Body with paper texture
@@ -154,14 +170,27 @@ summary {
 
 :root {
 
+  /* ---------- BRAND IDENTITY (single source of truth) ---------- */
+  /* These are the canonical brand values. Any change here           */
+  /* should ripple through the derived palette below.                */
+  --brand-navy:    #0F1419;   /* Primary   — متن، هدر، تیتر         */
+  --brand-amber:   #E89B2C;   /* Accent    — CTA، تأکید، شماره      */
+  --brand-petrol:  #2C7873;   /* Secondary — مکمل، کارت‌های کلاس    */
+  --brand-cream:   #FBF8F0;   /* Background — پس‌زمینه اصلی         */
+  --brand-paper:   #FFFFFF;   /* Surface   — کارت‌ها، مودال          */
+  --brand-muted:   #6A7791;   /* Muted     — متن ثانویه              */
+  --brand-success: #3E7B52;   /* Success   — پیام موفقیت             */
+  --brand-danger:  #B14A38;   /* Danger    — خطا                     */
+
   /* ---------- INK PALETTE ---------- */
-  /* Fountain-pen blue-black. Warm-shifted, never pure black. */
-  --ink-950: #0A0E17;
-  --ink-900: #131823;
+  /* Fountain-pen blue-black. Warm-shifted, never pure black.        */
+  /* ink-900 is Navy, ink-500 is Muted — anchored to brand values.  */
+  --ink-950: #080C11;
+  --ink-900: #0F1419;   /* = brand-navy */
   --ink-800: #1E2637;
   --ink-700: #2F3A4F;
   --ink-600: #46546D;
-  --ink-500: #6A7791;
+  --ink-500: #6A7791;   /* = brand-muted */
   --ink-400: #98A3B8;
   --ink-300: #C0C8D6;
   --ink-200: #DEE3EB;
@@ -169,24 +198,26 @@ summary {
   --ink-50:  #F6F8FA;
 
   /* ---------- PAPER PALETTE ---------- */
-  /* Warm notebook pages. Not sterile white. */
-  --paper-50:  #FBF8F0;
+  /* Warm notebook pages. Not sterile white.                         */
+  /* paper-50 is Cream — anchored to brand value.                    */
+  --paper-50:  #FBF8F0;   /* = brand-cream */
   --paper-100: #F6F1E4;
   --paper-200: #EDE5D2;
   --paper-300: #DED2B7;
   --paper-400: #C9B98F;
 
-  /* ---------- MUSTARD (primary accent) ---------- */
-  /* Deep ochre, not orange. Warm, characterful. */
-  --mustard-700: #7A5310;
-  --mustard-600: #A06E14;
-  --mustard-500: #C68B1E;
-  --mustard-400: #DDA83D;
-  --mustard-300: #EDC77A;
-  --mustard-200: #F5DEAB;
-  --mustard-100: #FAEFD3;
+  /* ---------- MUSTARD / AMBER (primary accent) ---------- */
+  /* Deep ochre → vibrant amber. 500 = brand-amber #E89B2C.          */
+  --mustard-700: #8A5A11;
+  --mustard-600: #B87A1E;
+  --mustard-500: #E89B2C;   /* = brand-amber */
+  --mustard-400: #EDB055;
+  --mustard-300: #F4C883;
+  --mustard-200: #F8DEB2;
+  --mustard-100: #FCEFDC;
 
   /* ---------- RUST (alert / warm highlight) ---------- */
+  /* Warm brick-red — distinct from Amber, used for callouts.        */
   --rust-700: #7A3520;
   --rust-600: #A64B2A;
   --rust-500: #C25E3A;
@@ -195,12 +226,13 @@ summary {
   --rust-100: #F7E6DD;
 
   /* ---------- PETROL (secondary — deep teal) ---------- */
-  --petrol-700: #143F42;
-  --petrol-600: #1E5A5E;
-  --petrol-500: #2A7A80;
-  --petrol-400: #4F9CA1;
-  --petrol-200: #C7DEE0;
-  --petrol-100: #E1EEF0;
+  /* 500 = brand-petrol #2C7873.                                     */
+  --petrol-700: #113F3C;
+  --petrol-600: #1E5A57;
+  --petrol-500: #2C7873;   /* = brand-petrol */
+  --petrol-400: #4E9C95;
+  --petrol-200: #C4DFDC;
+  --petrol-100: #E0EEEC;
 
   /* ---------- OLIVE (tertiary — muted green) ---------- */
   --olive-600: #4F5634;
@@ -214,15 +246,16 @@ summary {
   --plum-200: #E4CDD8;
 
   /* ---------- SEMANTIC ---------- */
-  --success-600: #2F7A47;
+  /* success-600 & danger-600 match brand values.                    */
+  --success-600: #3E7B52;   /* = brand-success */
   --success-100: #DCEEDF;
-  --danger-600: #A33B2A;
+  --danger-600: #B14A38;    /* = brand-danger */
   --danger-100: #F1D8D2;
 
   /* ---------- SEMANTIC ALIASES (for convenience) ---------- */
   --color-bg:            var(--paper-50);
   --color-bg-alt:        var(--paper-100);
-  --color-surface:       #FFFFFF;
+  --color-surface:       var(--brand-paper);
   --color-text:          var(--ink-900);
   --color-text-muted:    var(--ink-600);
   --color-text-subtle:   var(--ink-400);
@@ -431,6 +464,7 @@ body {
   font-variant-numeric: normal;
 }
 
+
 /* ============================================================
    4. PAPER TEXTURE OVERLAY
    ============================================================ */
@@ -614,7 +648,7 @@ a:focus-visible {
 /* Content links — auto underline */
 .content a {
   text-decoration: underline;
-  text-decoration-color: rgba(160, 110, 20, 0.35);
+  text-decoration-color: rgba(184, 122, 30, 0.35);
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
   font-weight: var(--fw-semibold);
@@ -1131,7 +1165,7 @@ body.is-locked {
   a,
   button,
   .btn {
-    -webkit-tap-highlight-color: rgba(198, 139, 30, 0.15);
+    -webkit-tap-highlight-color: rgba(232, 155, 44, 0.15);
   }
 
   /* Increase min tap target to 44px (WCAG) */
