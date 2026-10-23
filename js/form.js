@@ -1,12 +1,17 @@
 /* ============================================================
    form.js
    Miss Math — Registration Form Engine
-   فاز ۳ — نسخه کامل نهایی v5.0.0
+   فاز ۳ — نسخه کامل نهایی v5.1.0
 
    ─── OVERVIEW ─────────────────────────────────────────────
    The conversion engine. Renders the pre-registration form,
    validates input with live feedback, and sends directly to
    WhatsApp. Zero-friction, maximum conversion.
+
+   ─── UPDATES IN v5.1.0 ────────────────────────────────────
+   • Updated GRADES to include 3rd to 12th (Elementary, Middle, High)
+   • Added grade mappings for 10th, 11th, and 12th grades
+   • Synchronized with data.js categories
 
    ─── ARCHITECTURE (35 LAYERS) ─────────────────────────────
    L01  Guards & Version
@@ -70,8 +75,8 @@
   if (window.__MissMathFormLoaded) return;
   window.__MissMathFormLoaded = true;
 
-  const VERSION = '5.0.0';
-  const BUILD   = '1403.07';
+  const VERSION = '5.1.0';
+  const BUILD   = '1403.08';
 
 
   /* ============================================================
@@ -152,26 +157,25 @@
 
 
   /* ============================================================
-     L03 — GRADES DATA
+     L03 — GRADES DATA (Updated for 3rd to 12th Grade)
      ============================================================ */
 
   const GRADES = [
-    { value: 'first',   label: 'اول دبستان',           group: 'ابتدایی' },
-    { value: 'second',  label: 'دوم دبستان',           group: 'ابتدایی' },
-    { value: 'third',   label: 'سوم دبستان',           group: 'ابتدایی' },
-    { value: 'fourth',  label: 'چهارم دبستان',         group: 'ابتدایی' },
-    { value: 'fifth',   label: 'پنجم دبستان',           group: 'ابتدایی' },
-    { value: 'sixth',   label: 'ششم دبستان',            group: 'ابتدایی' },
-    { value: 'seventh', label: 'هفتم (متوسطه اول)',    group: 'متوسطه' },
-    { value: 'eighth',  label: 'هشتم (متوسطه اول)',    group: 'متوسطه' },
-    { value: 'ninth',   label: 'نهم (متوسطه اول)',     group: 'متوسطه' },
-    { value: 'other',   label: 'پایه دیگر',            group: 'سایر' },
+    { value: 'third',    label: 'سوم دبستان',           group: 'ابتدایی' },
+    { value: 'fourth',   label: 'چهارم دبستان',         group: 'ابتدایی' },
+    { value: 'fifth',    label: 'پنجم دبستان',          group: 'ابتدایی' },
+    { value: 'sixth',    label: 'ششم دبستان',           group: 'ابتدایی' },
+    { value: 'seventh',  label: 'هفتم (متوسطه اول)',    group: 'متوسطه اول' },
+    { value: 'eighth',   label: 'هشتم (متوسطه اول)',    group: 'متوسطه اول' },
+    { value: 'ninth',    label: 'نهم (متوسطه اول)',     group: 'متوسطه اول' },
+    { value: 'tenth',    label: 'دهم (متوسطه دوم)',     group: 'متوسطه دوم' },
+    { value: 'eleventh', label: 'یازدهم (متوسطه دوم)',  group: 'متوسطه دوم' },
+    { value: 'twelfth',  label: 'دوازدهم (متوسطه دوم)', group: 'متوسطه دوم' },
+    { value: 'other',    label: 'پایه دیگر',            group: 'سایر' },
   ];
 
   /* Persian grade name → value */
   const GRADE_NAME_TO_VALUE = {
-    'اول':    'first',
-    'دوم':    'second',
     'سوم':    'third',
     'چهارم':  'fourth',
     'پنجم':   'fifth',
@@ -179,6 +183,9 @@
     'هفتم':   'seventh',
     'هشتم':   'eighth',
     'نهم':    'ninth',
+    'دهم':    'tenth',
+    'یازدهم': 'eleventh',
+    'دوازدهم':'twelfth',
   };
 
 
@@ -1002,7 +1009,9 @@
     }
 
     if (ctx.classCode) {
-      body.appendChild(el('div', { class: 'form-context__code' }, [
+      body.appendChild(el('div', {
+        class: 'form-context__code',
+      }, [
         el('span', { text: 'کد کلاس: ' }),
         el('strong', { text: ctx.classCode, dir: 'ltr' }),
       ]));
@@ -1342,7 +1351,7 @@
     const lines = [];
 
     lines.push('سلام خانم صفری 👋');
-    lines.push('از سایت «خانم ریاضی» اومدم و می‌خوام پیش‌ثبت‌نام کنم.');
+    lines.push('از سایت «خانم صفری» اومدم و می‌خوام پیش‌ثبت‌نام کنم.');
     lines.push('');
 
     if (opts.classTitle) {
